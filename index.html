@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RailSafar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9; /* हल्का ग्रे बैकग्राउंड */
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background-color: #ffffff; /* सफेद हेडर */
+      border-bottom: 1px solid #ddd;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    .logo-icon {
+      font-size: 28px;
+      margin-right: 8px;
+      color: #444; /* डार्क ग्रे */
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #222;
+    }
+    .tagline {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+    .share-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- Logo + Title -->
+    <div class="logo">
+      <span class="logo-icon">🚆</span>
+      <div>
+        <div class="title">RailSafar</div>
+        <div class="tagline">आपकी यात्रा का स्मार्ट साथी</div>
+      </div>
+    </div>
+
+    <!-- Share Button -->
+    <button class="share-btn" onclick="shareApp()">📤</button>
+  </header>
+
+  <script>
+    function shareApp() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'RailSafar',
+          text: 'RailSafar – आपकी यात्रा का स्मार्ट साथी',
+          url: window.location.href
+        }).catch(console.error);
+      } else {
+        alert("Sharing not supported. Copy this link: " + window.location.href);
+      }
+    }
+  </script>
+
+</body>
+</html>
