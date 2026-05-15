@@ -44,44 +44,26 @@
       color: #666;
       margin-top: 0px;
     }
-    .share-container {
-      text-align: center;
-    }
-    .share-btn {
-      background: none;
-      border: none;
-      font-size: 22px;
-      cursor: pointer;
-      color: #444;
-    }
-    .share-text {
-      font-size: 12px;
-      color: #444;
-      margin-top: 2px;
-    }
     .button-container {
-      margin-top: 50px;
+      margin-top: 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 25px;
+      gap: 30px;
     }
-    .btn {
-      width: 50%;
-      max-width: 240px;
-      padding: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 50px; /* गोल आकार */
-      cursor: pointer;
+    .circle-btn {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%; /* पूरी तरह गोल */
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      font-weight: bold;
+      cursor: pointer;
       transition: transform 0.2s ease, background-color 0.3s ease;
     }
-    .btn:hover {
+    .circle-btn:hover {
       transform: scale(1.05); /* हल्का ज़ूम इफेक्ट */
     }
     .train-btn {
@@ -99,7 +81,16 @@
       background-color: #ffcc80;
     }
     .btn-icon {
-      font-size: 26px;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .btn-text {
+      font-size: 18px;
+    }
+    .btn-hint {
+      font-size: 12px;
+      color: #555;
+      margin-top: 5px;
     }
 
   </style>
@@ -122,19 +113,21 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
-    <!-- Main Buttons -->
+  <!-- Main Circular Buttons -->
   <div class="button-container">
-    <!-- Train Info Button -->
-    <button class="btn train-btn">
+    <!-- ट्रेन कब आएगी -->
+    <div class="circle-btn train-btn">
       <span class="btn-icon">🚆</span>
-      <span>ट्रेन कहां है</span>
-    </button>
+      <span class="btn-text">ट्रेन कब आएगी</span>
+    </div>
+    <div class="btn-hint">बटन दबाइये और बोलिये</div>
 
-    <!-- Directions Button -->
-    <button class="btn directions-btn">
+    <!-- किधर जाऊं -->
+    <div class="circle-btn directions-btn">
       <span class="btn-icon">🧭</span>
-      <span>किधर जाऊं</span>
-    </button>
+      <span class="btn-text">किधर जाऊं</span>
+    </div>
+    <div class="btn-hint">बटन दबाइये और बोलिये</div>
   </div>
 
   <script>
