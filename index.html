@@ -64,7 +64,7 @@
       transition: transform 0.2s ease, background-color 0.3s ease;
     }
     .circle-btn:hover {
-      transform: scale(1.05); /* हल्का ज़ूम इफेक्ट */
+      transform: scale(1.05);
     }
     .train-btn {
       background-color: #e0f2e9; /* हल्का हरा */
@@ -72,13 +72,6 @@
     }
     .train-btn:hover {
       background-color: #c8e6c9;
-    }
-    .directions-btn {
-      background-color: #ffe0b2; /* हल्का ऑरेंज */
-      color: #222;
-    }
-    .directions-btn:hover {
-      background-color: #ffcc80;
     }
     .btn-icon {
       font-size: 32px;
@@ -88,9 +81,9 @@
       font-size: 18px;
     }
     .btn-hint {
-      font-size: 12px;
+      font-size: 14px;
       color: #555;
-      margin-top: 5px;
+      margin-top: 8px;
     }
 
   </style>
@@ -113,14 +106,12 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
-  <!-- Main Circular Buttons -->
-  <div class="button-container">
-    <!-- ट्रेन कब आएगी -->
-    <div class="circle-btn train-btn">
-      <span class="btn-icon">🚆</span>
-      <span class="btn-text">ट्रेन कब आएगी</span>
-    </div>
-    <div class="btn-hint">बटन दबाइये और बोलिये</div>
+  <!-- Main Circular Button: ट्रेन कब आएगी -->
+  <div class="circle-btn train-btn" onclick="askTrainName()">
+    <span class="btn-icon">🚆</span>
+    <span class="btn-text">ट्रेन कब आएगी</span>
+  </div>
+  <div class="btn-hint">👉 बटन दबाइये और ट्रेन का नाम बोलिये</div>
 
     <!-- किधर जाऊं -->
     <div class="circle-btn directions-btn">
@@ -140,6 +131,22 @@
         }).catch(console.error);
       } else {
         alert("Sharing not supported. Copy this link: " + window.location.href);
+      }
+    }
+
+    function askTrainName() {
+      if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'hi-IN'; // हिंदी इनपुट
+        recognition.start();
+
+        recognition.onresult = function(event) {
+          const spokenText = event.results[0][0].transcript;
+          alert("आपने कहा: " + spokenText + "\n(सिस्टम ट्रेन का नाम पहचानकर बॉक्स में जानकारी दिखाएगा)");
+          // 👉 यहां बाद में API कॉल जोड़ेंगे
+        };
+      } else {
+        alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
       }
     }
   </script>
