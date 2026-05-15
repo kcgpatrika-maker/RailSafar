@@ -59,27 +59,30 @@
       color: #444;
       margin-top: 2px;
     }
-        .button-container {
-      margin-top: 40px;
+    .button-container {
+      margin-top: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 25px;
     }
     .btn {
       width: 90%;
-      max-width: 320px;
-      padding: 15px;
-      font-size: 18px;
+      max-width: 340px;
+      padding: 20px;
+      font-size: 20px;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 50px; /* गोल आकार */
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      transition: background-color 0.3s ease;
+      gap: 12px;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.05); /* हल्का ज़ूम इफेक्ट */
     }
     .train-btn {
       background-color: #e0f2e9; /* हल्का हरा */
@@ -96,7 +99,7 @@
       background-color: #ffcc80;
     }
     .btn-icon {
-      font-size: 22px;
+      font-size: 26px;
     }
 
   </style>
@@ -119,7 +122,7 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
-  <!-- Main Buttons -->
+    <!-- Main Buttons -->
   <div class="button-container">
     <!-- Train Info Button -->
     <button class="btn train-btn">
