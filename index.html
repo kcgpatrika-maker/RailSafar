@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RailSafar</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Mukta', sans-serif;
       background-color: #f9f9f9; /* हल्का ग्रे बैकग्राउंड */
     }
     header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       padding: 10px 15px;
       background-color: #ffffff; /* सफेद हेडर */
@@ -23,19 +25,27 @@
       align-items: center;
     }
     .logo-icon {
-      font-size: 28px;
+      font-size: 32px;
       margin-right: 8px;
-      color: #444; /* डार्क ग्रे */
+      color: #444;
     }
     .title {
       font-size: 24px;
       font-weight: bold;
-      color: #222;
+    }
+    .title .rail {
+      color: #d32f2f; /* लाल */
+    }
+    .title .safar {
+      color: #222; /* काला */
     }
     .tagline {
-      font-size: 16px;
+      font-size: 14px;
       color: #666;
       margin-top: 2px;
+    }
+    .share-container {
+      text-align: center;
     }
     .share-btn {
       background: none;
@@ -44,6 +54,11 @@
       cursor: pointer;
       color: #444;
     }
+    .share-text {
+      font-size: 12px;
+      color: #444;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -51,15 +66,18 @@
   <header>
     <!-- Logo + Title -->
     <div class="logo">
-      <span class="logo-icon">🚇</span>
+      <span class="logo-icon">🚉</span>
       <div>
-        <div class="title">RailSafar</div>
+        <div class="title"><span class="rail">Rail</span><span class="safar">Safar</span></div>
         <div class="tagline">आपकी यात्रा का स्मार्ट साथी</div>
       </div>
     </div>
 
-    <!-- Share Button -->
-    <button class="share-btn" onclick="shareApp()">📤</button>
+    <!-- Share Button + Text -->
+    <div class="share-container">
+      <button class="share-btn" onclick="shareApp()">📤</button>
+      <div class="share-text">Shear</div>
+    </div>
   </header>
 
   <script>
