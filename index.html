@@ -59,6 +59,46 @@
       color: #444;
       margin-top: 2px;
     }
+        .button-container {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .btn {
+      width: 90%;
+      max-width: 320px;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background-color 0.3s ease;
+    }
+    .train-btn {
+      background-color: #e0f2e9; /* हल्का हरा */
+      color: #222;
+    }
+    .train-btn:hover {
+      background-color: #c8e6c9;
+    }
+    .directions-btn {
+      background-color: #ffe0b2; /* हल्का ऑरेंज */
+      color: #222;
+    }
+    .directions-btn:hover {
+      background-color: #ffcc80;
+    }
+    .btn-icon {
+      font-size: 22px;
+    }
+
   </style>
 </head>
 <body>
@@ -79,6 +119,20 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
+  <!-- Main Buttons -->
+  <div class="button-container">
+    <!-- Train Info Button -->
+    <button class="btn train-btn">
+      <span class="btn-icon">🚆</span>
+      <span>Train Info</span>
+    </button>
+
+    <!-- Directions Button -->
+    <button class="btn directions-btn">
+      <span class="btn-icon">🧭</span>
+      <span>Directions</span>
+    </button>
+  </div>
 
   <script>
     function shareApp() {
