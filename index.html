@@ -105,6 +105,21 @@
       text-align: left;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
+        .mic-overlay {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 22px;
+      padding: 20px 30px;
+      border-radius: 50%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 9999;
+    }
+
  </style>
 </head>
 <body>
@@ -143,6 +158,11 @@
 
     <!-- आउटपुट बॉक्स -->
     <div id="output-box" class="train-box" style="display:none;"></div>
+
+    <!-- माइक विज़ुअल -->
+    <div id="mic-overlay" class="mic-overlay" style="display:none;">
+      🎤 Listening...
+    </div>
   </div>
 
   <script>
@@ -158,20 +178,28 @@
       }
     }
 
-    // डमी ट्रेन डेटा
     const trainData = {
       "मंडोर": { name: "मंडोर एक्सप्रेस", arrival: "19:45 जयपुर", departure: "19:50 जयपुर" },
       "प्रयागराज": { name: "प्रयागराज एक्सप्रेस", arrival: "21:10 जयपुर", departure: "21:15 जयपुर" }
     };
 
-    // ट्रेन कब आएगी फंक्शन
+    function showMic() {
+      document.getElementById("mic-overlay").style.display = "block";
+    }
+    function hideMic() {
+      document.getElementById("mic-overlay").style.display = "none";
+    }
+
+    // ट्रेन कब आएगी
     function askTrainName() {
       if ('webkitSpeechRecognition' in window) {
+        showMic();
         const recognition = new webkitSpeechRecognition();
         recognition.lang = 'hi-IN';
         recognition.start();
 
         recognition.onresult = function(event) {
+          hideMic();
           const spokenText = event.results[0][0].transcript.trim();
           const box = document.getElementById("output-box");
 
@@ -188,33 +216,43 @@
             box.style.display = "block";
           }
         };
+
+        recognition.onend = hideMic;
       } else {
         alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
       }
     }
 
-    // किधर जाऊं फंक्शन
+    // किधर जाऊं
     function askDirections() {
       if ('webkitSpeechRecognition' in window) {
+        showMic();
         const recognition = new webkitSpeechRecognition();
         recognition.lang = 'hi-IN';
         recognition.start();
 
         recognition.onresult = function(event) {
+          hideMic();
           const spokenText = event.results[0][0].transcript.trim();
           const box = document.getElementById("output-box");
 
-          // Google Maps URL बनाना
-          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spokenText)}`;
+          // बॉक्स में वेरिफिकेशन बटन
           box.innerHTML = `
             🧭 आपने कहा: <strong>${spokenText}</strong><br>
-            👉 <a href="${mapsUrl}" target="_blank">Google Maps पर देखें</a>
+            <button onclick="openMaps('${spokenText}')">सही है</button>
           `;
           box.style.display = "block";
         };
+
+        recognition.onend = hideMic;
       } else {
         alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
       }
+    }
+
+    function openMaps(place) {
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(place)}&travelmode=walking`;
+      window.open(mapsUrl, "_blank");
     }
   </script>
 
