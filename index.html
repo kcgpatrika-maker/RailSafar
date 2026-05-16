@@ -48,7 +48,7 @@
       margin-top: 40px;
       display: flex;
       flex-direction: column;
-      align-items: center;   /* सेंटर में */
+      align-items: center;   /* दोनों बटन सेंटर में */
       justify-content: center;
       gap: 25px;
       text-align: center;
@@ -64,7 +64,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: transform 0.2s ease, background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* हल्का शैडो आकर्षण के लिए */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     .circle-btn:hover {
       transform: scale(1.05);
@@ -76,7 +76,6 @@
     .train-btn:hover {
       background-color: #c8e6c9;
     }
-    
     .directions-btn {
       background-color: #ffe0b2; /* हल्का ऑरेंज */
       color: #222;
@@ -86,7 +85,7 @@
     }
     .btn-icon {
       font-size: 32px;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     .btn-text {
       font-size: 18px;
@@ -106,7 +105,7 @@
       text-align: left;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-  </style>
+ </style>
 </head>
 <body>
 
@@ -126,24 +125,24 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
-  <!-- Main Circular Button: ट्रेन कब आएगी -->
+  <!-- Main Circular Buttons -->
   <div class="button-container">
+    <!-- ट्रेन कब आएगी -->
     <div class="circle-btn train-btn" onclick="askTrainName()">
       <span class="btn-icon">🚆</span>
       <span class="btn-text">ट्रेन कब आएगी</span>
     </div>
     <div class="btn-hint">👉 बटन दबाइये और ट्रेन का नाम बोलिये</div>
 
-    <!-- ट्रेन जानकारी बॉक्स -->
-    <div id="train-box" class="train-box" style="display:none;"></div>
-  </div>
-
     <!-- किधर जाऊं -->
-    <div class="circle-btn directions-btn">
+    <div class="circle-btn directions-btn" onclick="askDirections()">
       <span class="btn-icon">🧭</span>
       <span class="btn-text">किधर जाऊं</span>
     </div>
-    <div class="btn-hint">बटन दबाइये और बोलिये</div>
+    <div class="btn-hint">👉 बटन दबाइये और जगह का नाम बोलिये</div>
+
+    <!-- आउटपुट बॉक्स -->
+    <div id="output-box" class="train-box" style="display:none;"></div>
   </div>
 
   <script>
@@ -160,21 +159,23 @@
     }
 
       <script>
+  <script>
     // डमी ट्रेन डेटा
     const trainData = {
       "मंडोर": { name: "मंडोर एक्सप्रेस", arrival: "19:45 जयपुर", departure: "19:50 जयपुर" },
       "प्रयागराज": { name: "प्रयागराज एक्सप्रेस", arrival: "21:10 जयपुर", departure: "21:15 जयपुर" }
     };
 
+    // ट्रेन कब आएगी फंक्शन
     function askTrainName() {
       if ('webkitSpeechRecognition' in window) {
         const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'hi-IN'; // हिंदी इनपुट
+        recognition.lang = 'hi-IN';
         recognition.start();
 
         recognition.onresult = function(event) {
           const spokenText = event.results[0][0].transcript.trim();
-          const box = document.getElementById("train-box");
+          const box = document.getElementById("output-box");
 
           if(trainData[spokenText]) {
             const info = trainData[spokenText];
@@ -193,6 +194,32 @@
         alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
       }
     }
+
+    // किधर जाऊं फंक्शन
+    function askDirections() {
+      if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'hi-IN';
+        recognition.start();
+
+        recognition.onresult = function(event) {
+          const spokenText = event.results[0][0].transcript.trim();
+          const box = document.getElementById("output-box");
+
+          // Google Maps URL बनाना
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spokenText)}`;
+          box.innerHTML = `
+            🧭 आपने कहा: <strong>${spokenText}</strong><br>
+            👉 <a href="${mapsUrl}" target="_blank">Google Maps पर देखें</a>
+          `;
+          box.style.display = "block";
+        };
+      } else {
+        alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
+      }
+    }
+  </script>
+
   </script>
 
   </script>
