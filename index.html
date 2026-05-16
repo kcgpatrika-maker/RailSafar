@@ -153,15 +153,14 @@
       <div class="share-text">Shear</div>
     </div>
   </header>
-<!-- Main Circular Buttons -->
-<div class="button-container">
-  <!-- ट्रेन कब आएगी -->
-  <div class="circle-btn train-btn" onclick="askTrainName()">
-    <span class="btn-icon">🚆</span>
-    <span class="btn-text">ट्रेन कब आएगी</span>
-  </div>
-  <div class="btn-hint">👉 बटन दबाइये और ट्रेन का नाम बोलिये</div>
-</div>
+  <!-- Main Circular Buttons -->
+  <div class="button-container">
+    <!-- ट्रेन कब आएगी -->
+    <div class="circle-btn train-btn" onclick="askTrainName()">
+      <span class="btn-icon">🚆</span>
+      <span class="btn-text">ट्रेन कब आएगी</span>
+    </div>
+    <div class="btn-hint">👉 बटन दबाइये और ट्रेन का नाम बोलिये</div>
 
     <!-- किधर जाऊं -->
     <div class="circle-btn directions-btn" onclick="askDirections()">
@@ -206,60 +205,38 @@
     }
 
     // ट्रेन कब आएगी
-function askTrainName() {
-  if ('webkitSpeechRecognition' in window) {
-    const recognition = new webkitSpeechRecognition();
-    recognition.lang = 'hi-IN'; // हिंदी इनपुट
-    recognition.start();
+    function askTrainName() {
+      if ('webkitSpeechRecognition' in window) {
+        showMic();
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'hi-IN';
+        recognition.start();
 
-    recognition.onresult = function(event) {
-      const spokenText = event.results[0][0].transcript.trim();
+        recognition.onresult = function(event) {
+          hideMic();
+          const spokenText = event.results[0][0].transcript.trim();
+          const box = document.getElementById("output-box");
 
-      // डेमो: ट्रेन नाम से ट्रेन नंबर मैपिंग (बाद में पूरी लिस्ट जोड़नी होगी)
-      const trainMap = {
-        "मंडोर एक्सप्रेस": "14865",
-        "मरुधर एक्सप्रेस": "14863",
-        "प्रयागराज एक्सप्रेस": "12417"
-      };
+          if(trainData[spokenText]) {
+            const info = trainData[spokenText];
+            box.innerHTML = `
+              <strong>🚆 ${info.name}</strong><br>
+              अगला आगमन: ${info.arrival}<br>
+              अगला प्रस्थान: ${info.departure}
+            `;
+            box.style.display = "block";
+          } else {
+            box.innerHTML = `❌ ट्रेन "${spokenText}" का डेटा उपलब्ध नहीं है।`;
+            box.style.display = "block";
+          }
+        };
 
-      // डेमो: स्टेशन नाम से स्टेशन कोड मैपिंग
-      const stationMap = {
-        "जयपुर": "JP",
-        "दिल्ली": "DLI",
-        "जोधपुर": "JU"
-      };
-
-      let trainNo = null;
-      let stationCode = null;
-
-      // ट्रेन नाम पहचानना
-      for (let name in trainMap) {
-        if (spokenText.includes(name)) {
-          trainNo = trainMap[name];
-          break;
-        }
-      }
-
-      // स्टेशन नाम पहचानना
-      for (let st in stationMap) {
-        if (spokenText.includes(st)) {
-          stationCode = stationMap[st];
-          break;
-        }
-      }
-
-      if (trainNo && stationCode) {
-        // NTES लिंक बनाना
-        const ntesUrl = `https://enquiry.indianrail.gov.in/ntes/TrainRunningStatus?trainNo=${trainNo}&stationCode=${stationCode}`;
-        window.open(ntesUrl, "_blank");
+        recognition.onend = hideMic;
       } else {
-        alert("ट्रेन या स्टेशन पहचान में नहीं आया।");
+        alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
       }
-    };
-  } else {
-    alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
-  }
-}
+    }
+
     // किधर जाऊं
     function askDirections() {
       if ('webkitSpeechRecognition' in window) {
