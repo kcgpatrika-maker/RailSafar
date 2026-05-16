@@ -105,19 +105,32 @@
       text-align: left;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-        .mic-overlay {
+    .mic-overlay {
       position: fixed;
       top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,150,136,0.9);
       color: #fff;
-      font-size: 22px;
-      padding: 20px 30px;
+      font-size: 20px;
+      padding: 30px;
       border-radius: 50%;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
       z-index: 9999;
+      animation: pulse 1.5s infinite;
+    }
+    .mic-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .mic-text {
+      font-size: 16px;
+    }
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
  </style>
@@ -161,7 +174,8 @@
 
     <!-- माइक विज़ुअल -->
     <div id="mic-overlay" class="mic-overlay" style="display:none;">
-      🎤 Listening...
+      <div class="mic-icon">🎤</div>
+      <div class="mic-text">Listening...</div>
     </div>
   </div>
 
@@ -236,10 +250,10 @@
           const spokenText = event.results[0][0].transcript.trim();
           const box = document.getElementById("output-box");
 
-          // बॉक्स में वेरिफिकेशन बटन
           box.innerHTML = `
             🧭 आपने कहा: <strong>${spokenText}</strong><br>
-            <button onclick="openMaps('${spokenText}')">सही है</button>
+            <button onclick="openMaps('${spokenText}')">✅ सही है</button>
+            <button onclick="askDirections()">❌ गलत है</button>
           `;
           box.style.display = "block";
         };
@@ -254,6 +268,7 @@
       const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(place)}&travelmode=walking`;
       window.open(mapsUrl, "_blank");
     }
+
   </script>
 
 </body>
