@@ -1,272 +1,796 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>RailSafar</title>
+
   <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      font-family: 'Mukta', sans-serif;
-      background-color: #f9f9f9; /* हल्का ग्रे बैकग्राउंड */
-    }
-    header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 10px 15px;
-      background-color: #ffffff; /* सफेद हेडर */
-      border-bottom: 1px solid #ddd;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-    .logo-icon {
-      font-size: 32px;
-      margin-right: 8px;
-      color: #444;
-    }
-    .title {
-      font-size: 26px;
-      font-weight: bold;
-    }
-    .title .rail {
-      color: #d32f2f; /* लाल */
-    }
-    .title .safar {
-      color: #222; /* काला */
-    }
-    .tagline {
-      font-size: 16px;
-      color: #666;
-      margin-top: 0px;
-    }
-    .button-container {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;   /* दोनों बटन सेंटर में */
-      justify-content: center;
-      gap: 25px;
-      text-align: center;
-    }
-    .circle-btn {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%; /* पूरी तरह गोल */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s ease, background-color 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .circle-btn:hover {
-      transform: scale(1.05);
-    }
-    .train-btn {
-      background-color: #e0f2e9; /* हल्का हरा */
-      color: #222;
-    }
-    .train-btn:hover {
-      background-color: #c8e6c9;
-    }
-    .directions-btn {
-      background-color: #ffe0b2; /* हल्का ऑरेंज */
-      color: #222;
-    }
-    .directions-btn:hover {
-      background-color: #ffcc80;
-    }
-    .btn-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-    .btn-text {
-      font-size: 18px;
-    }
-    .btn-hint {
-      font-size: 14px;
-      color: #555;
-      margin-top: 8px;
-    }
-    .train-box {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      width: 90%;
-      max-width: 350px;
-      text-align: left;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .mic-overlay {
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,150,136,0.9);
-      color: #fff;
-      font-size: 20px;
-      padding: 30px;
-      border-radius: 50%;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      z-index: 9999;
-      animation: pulse 1.5s infinite;
-    }
-    .mic-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-    .mic-text {
-      font-size: 16px;
-    }
-    @keyframes pulse {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+    *{
+      box-sizing:border-box;
     }
 
- </style>
+    body{
+      margin:0;
+      padding:0;
+      font-family:'Mukta', sans-serif;
+      background:#f3f4f6;
+      color:#222;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      padding:12px 15px;
+      background:#ffffff;
+      border-bottom:1px solid #ddd;
+    }
+
+    .logo{
+      display:flex;
+      align-items:flex-start;
+    }
+
+    .logo-icon{
+      font-size:34px;
+      margin-right:10px;
+    }
+
+    .title{
+      font-size:28px;
+      font-weight:bold;
+      line-height:1;
+    }
+
+    .rail{
+      color:#d32f2f;
+    }
+
+    .safar{
+      color:#222;
+    }
+
+    .tagline{
+      font-size:14px;
+      color:#666;
+      margin-top:3px;
+    }
+
+    .share-container{
+      text-align:center;
+    }
+
+    .share-btn{
+      border:none;
+      background:#1976d2;
+      color:white;
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      font-size:18px;
+      cursor:pointer;
+    }
+
+    .share-text{
+      font-size:12px;
+      color:#555;
+      margin-top:4px;
+    }
+
+    .button-container{
+      margin-top:35px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:22px;
+      padding-bottom:40px;
+    }
+
+    .circle-btn{
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      transition:0.2s;
+      box-shadow:0 5px 12px rgba(0,0,0,0.15);
+    }
+
+    .circle-btn:hover{
+      transform:scale(1.04);
+    }
+
+    .train-btn{
+      background:#dff5e6;
+    }
+
+    .directions-btn{
+      background:#ffe6c7;
+    }
+
+    .btn-icon{
+      font-size:36px;
+      margin-bottom:8px;
+    }
+
+    .btn-text{
+      font-size:20px;
+      font-weight:bold;
+    }
+
+    .btn-hint{
+      font-size:14px;
+      color:#555;
+      margin-top:-12px;
+    }
+
+    .output-box{
+      width:92%;
+      max-width:420px;
+    }
+
+    .train-card{
+      background:white;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 5px 15px rgba(0,0,0,0.12);
+    }
+
+    .card-top{
+      background:#1565c0;
+      color:white;
+      padding:16px;
+    }
+
+    .train-name{
+      font-size:22px;
+      font-weight:bold;
+      line-height:1.3;
+    }
+
+    .station-name{
+      font-size:17px;
+      margin-top:8px;
+    }
+
+    .status-strip{
+      margin-top:12px;
+      background:#fff3cd;
+      color:#856404;
+      padding:10px;
+      border-radius:10px;
+      font-size:15px;
+      font-weight:bold;
+    }
+
+    .card-body{
+      padding:16px;
+    }
+
+    .time-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .time-box{
+      background:#f7f7f7;
+      border-radius:12px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .time-title{
+      font-size:14px;
+      color:#555;
+    }
+
+    .time-value{
+      font-size:20px;
+      font-weight:bold;
+      margin-top:4px;
+    }
+
+    .journey-box{
+      margin-top:18px;
+      background:#eef4ff;
+      padding:12px;
+      border-radius:12px;
+      text-align:center;
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    .journey-line{
+      margin-top:8px;
+      font-weight:bold;
+      color:#1565c0;
+    }
+
+    .card-actions{
+      display:flex;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .action-btn{
+      flex:1;
+      border:none;
+      background:#1565c0;
+      color:white;
+      padding:10px;
+      border-radius:10px;
+      font-size:14px;
+      cursor:pointer;
+    }
+
+    .mic-overlay{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      background:rgba(0,150,136,0.95);
+      color:white;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+      animation:pulse 1.5s infinite;
+      box-shadow:0 0 25px rgba(0,0,0,0.35);
+    }
+
+    .mic-icon{
+      font-size:48px;
+    }
+
+    .mic-text{
+      margin-top:10px;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    @keyframes pulse{
+
+      0%{
+        transform:translate(-50%,-50%) scale(1);
+      }
+
+      50%{
+        transform:translate(-50%,-50%) scale(1.08);
+      }
+
+      100%{
+        transform:translate(-50%,-50%) scale(1);
+      }
+    }
+
+  </style>
 </head>
+
 <body>
 
   <header>
-    <!-- Logo + Title -->
+
     <div class="logo">
-      <span class="logo-icon">🚉</span>
+
+      <div class="logo-icon">🚉</div>
+
       <div>
-        <div class="title"><span class="rail">Rail</span><span class="safar">Safar</span></div>
-        <div class="tagline">आपकी यात्रा का स्मार्ट साथी</div>
+
+        <div class="title">
+          <span class="rail">Rail</span><span class="safar">Safar</span>
+        </div>
+
+        <div class="tagline">
+          आपकी यात्रा का स्मार्ट साथी
+        </div>
+
       </div>
+
     </div>
 
-    <!-- Share Button + Text -->
     <div class="share-container">
-      <button class="share-btn" onclick="shareApp()">📤</button>
-      <div class="share-text">Shear</div>
+
+      <button class="share-btn" onclick="shareApp()">
+        📤
+      </button>
+
+      <div class="share-text">
+        Share
+      </div>
+
     </div>
+
   </header>
-  <!-- Main Circular Buttons -->
+
+  <!-- BUTTONS -->
+
   <div class="button-container">
-    <!-- ट्रेन कब आएगी -->
+
     <div class="circle-btn train-btn" onclick="askTrainName()">
-      <span class="btn-icon">🚆</span>
-      <span class="btn-text">ट्रेन कब आएगी</span>
-    </div>
-    <div class="btn-hint">👉 बटन दबाइये और ट्रेन का नाम बोलिये</div>
 
-    <!-- किधर जाऊं -->
+      <div class="btn-icon">🚆</div>
+
+      <div class="btn-text">
+        ट्रेन कब आएगी
+      </div>
+
+    </div>
+
+    <div class="btn-hint">
+      👉 बटन दबाइये और ट्रेन + स्टेशन बोलिये
+    </div>
+
     <div class="circle-btn directions-btn" onclick="askDirections()">
-      <span class="btn-icon">🧭</span>
-      <span class="btn-text">किधर जाऊं</span>
-    </div>
-    <div class="btn-hint">👉 बटन दबाइये और जगह का नाम बोलिये</div>
 
-    <!-- आउटपुट बॉक्स -->
-    <div id="output-box" class="train-box" style="display:none;"></div>
+      <div class="btn-icon">🧭</div>
 
-    <!-- माइक विज़ुअल -->
-    <div id="mic-overlay" class="mic-overlay" style="display:none;">
-      <div class="mic-icon">🎤</div>
-      <div class="mic-text">Listening...</div>
+      <div class="btn-text">
+        किधर जाऊं
+      </div>
+
     </div>
+
+    <div class="btn-hint">
+      👉 जगह का नाम बोलिये
+    </div>
+
+    <!-- OUTPUT -->
+
+    <div id="output-box" class="output-box"></div>
+
+  </div>
+
+  <!-- MIC -->
+
+  <div
+    id="mic-overlay"
+    class="mic-overlay"
+    style="display:none;"
+  >
+
+    <div class="mic-icon">🎤</div>
+
+    <div class="mic-text">
+      Listening...
+    </div>
+
   </div>
 
   <script>
-    function shareApp() {
-      if (navigator.share) {
+
+    // SHARE
+
+    function shareApp(){
+
+      if(navigator.share){
+
         navigator.share({
-          title: 'RailSafar',
-          text: 'RailSafar – आपकी यात्रा का स्मार्ट साथी',
-          url: window.location.href
-        }).catch(console.error);
-      } else {
-        alert("Sharing not supported. Copy this link: " + window.location.href);
+
+          title:'RailSafar',
+
+          text:'RailSafar - आपकी यात्रा का स्मार्ट साथी',
+
+          url:window.location.href
+
+        });
+
+      }else{
+
+        alert(
+          "Sharing not supported in this browser."
+        );
       }
     }
 
-    const trainData = {
-      "मंडोर": { name: "मंडोर एक्सप्रेस", arrival: "19:45 जयपुर", departure: "19:50 जयपुर" },
-      "प्रयागराज": { name: "प्रयागराज एक्सप्रेस", arrival: "21:10 जयपुर", departure: "21:15 जयपुर" }
-    };
+    // TRAIN DATABASE
 
-    function showMic() {
-      document.getElementById("mic-overlay").style.display = "block";
-    }
-    function hideMic() {
-      document.getElementById("mic-overlay").style.display = "none";
-    }
+    const trains = [
 
-    // ट्रेन कब आएगी
-    function askTrainName() {
-      if ('webkitSpeechRecognition' in window) {
-        showMic();
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'hi-IN';
-        recognition.start();
+      {
 
-        recognition.onresult = function(event) {
-          hideMic();
-          const spokenText = event.results[0][0].transcript.trim();
-          const box = document.getElementById("output-box");
+        number:"14864",
 
-          if(trainData[spokenText]) {
-            const info = trainData[spokenText];
-            box.innerHTML = `
-              <strong>🚆 ${info.name}</strong><br>
-              अगला आगमन: ${info.arrival}<br>
-              अगला प्रस्थान: ${info.departure}
-            `;
-            box.style.display = "block";
-          } else {
-            box.innerHTML = `❌ ट्रेन "${spokenText}" का डेटा उपलब्ध नहीं है।`;
-            box.style.display = "block";
+        hindi:"मरुधर एक्सप्रेस",
+
+        english:"Marudhar Express",
+
+        stations:{
+
+          "जयपुर":{
+
+            arrival:"01:15 AM",
+
+            departure:"01:25 AM"
+
+          },
+
+          "अजमेर":{
+
+            arrival:"11:20 PM",
+
+            departure:"11:30 PM"
+
           }
-        };
 
-        recognition.onend = hideMic;
-      } else {
-        alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
+        }
+
+      },
+
+      {
+
+        number:"12413",
+
+        hindi:"अमृतसर एक्सप्रेस",
+
+        english:"Amritsar Express",
+
+        stations:{
+
+          "जयपुर":{
+
+            arrival:"07:45 PM",
+
+            departure:"07:50 PM"
+
+          }
+
+        }
+
       }
+
+    ];
+
+    // MIC
+
+    function showMic(){
+
+      document.getElementById("mic-overlay")
+      .style.display = "flex";
     }
 
-    // किधर जाऊं
-    function askDirections() {
-      if ('webkitSpeechRecognition' in window) {
+    function hideMic(){
+
+      document.getElementById("mic-overlay")
+      .style.display = "none";
+    }
+
+    // QUERY PARSER
+
+    function parseTrainQuery(text){
+
+      let intent = "arrival";
+
+      // arrival
+
+      if(
+
+        text.includes("आएगी") ||
+
+        text.includes("आगमन") ||
+
+        text.includes("पहुंचेगी")
+
+      ){
+
+        intent = "arrival";
+      }
+
+      // departure
+
+      if(
+
+        text.includes("जाएगी") ||
+
+        text.includes("निकलेगी") ||
+
+        text.includes("प्रस्थान")
+
+      ){
+
+        intent = "departure";
+      }
+
+      // train detect
+
+      let matchedTrain = null;
+
+      for(const train of trains){
+
+        if(text.includes(train.hindi)){
+
+          matchedTrain = train;
+
+          break;
+        }
+      }
+
+      // station detect
+
+      let matchedStation = null;
+
+      if(matchedTrain){
+
+        for(const station in matchedTrain.stations){
+
+          if(text.includes(station)){
+
+            matchedStation = station;
+
+            break;
+          }
+        }
+      }
+
+      return{
+
+        train:matchedTrain,
+
+        station:matchedStation,
+
+        intent:intent
+      };
+    }
+
+    // TRAIN BUTTON
+
+    function askTrainName(){
+
+      if('webkitSpeechRecognition' in window){
+
         showMic();
-        const recognition = new webkitSpeechRecognition();
+
+        const recognition =
+          new webkitSpeechRecognition();
+
         recognition.lang = 'hi-IN';
+
         recognition.start();
 
-        recognition.onresult = function(event) {
+        recognition.onresult = function(event){
+
           hideMic();
-          const spokenText = event.results[0][0].transcript.trim();
-          const box = document.getElementById("output-box");
+
+          const spokenText =
+            event.results[0][0].transcript.trim();
+
+          const result =
+            parseTrainQuery(spokenText);
+
+          const box =
+            document.getElementById("output-box");
+
+          // TRAIN NOT FOUND
+
+          if(!result.train){
+
+            box.innerHTML = `
+
+              <div class="train-card">
+
+                <div class="card-body">
+
+                  ❌ ट्रेन पहचान में नहीं आई
+
+                </div>
+
+              </div>
+
+            `;
+
+            return;
+          }
+
+          // STATION NOT FOUND
+
+          if(!result.station){
+
+            box.innerHTML = `
+
+              <div class="train-card">
+
+                <div class="card-body">
+
+                  ❌ स्टेशन पहचान में नहीं आया
+
+                </div>
+
+              </div>
+
+            `;
+
+            return;
+          }
+
+          const stationData =
+            result.train.stations[result.station];
+
+          // TEMP LIVE STATUS
+
+          const liveStatus =
+            "⏱️ लगभग 25 मिनट देरी से चल रही है";
+
+          // CARD
 
           box.innerHTML = `
-            🧭 आपने कहा: <strong>${spokenText}</strong><br>
-            <button onclick="openMaps('${spokenText}')">✅ सही है</button>
-            <button onclick="askDirections()">❌ गलत है</button>
+
+            <div class="train-card">
+
+              <div class="card-top">
+
+                <div class="train-name">
+
+                  🚆 ${result.train.hindi}
+
+                  (${result.train.number})
+
+                </div>
+
+                <div class="station-name">
+
+                  📍 ${result.station} जंक्शन
+
+                </div>
+
+                <div class="status-strip">
+
+                  ${liveStatus}
+
+                </div>
+
+              </div>
+
+              <div class="card-body">
+
+                <div class="time-grid">
+
+                  <div class="time-box">
+
+                    <div class="time-title">
+
+                      🟢 निर्धारित आगमन
+
+                    </div>
+
+                    <div class="time-value">
+
+                      ${stationData.arrival}
+
+                    </div>
+
+                  </div>
+
+                  <div class="time-box">
+
+                    <div class="time-title">
+
+                      🔴 निर्धारित प्रस्थान
+
+                    </div>
+
+                    <div class="time-value">
+
+                      ${stationData.departure}
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="journey-box">
+
+                  🎤 आपने पूछा:
+
+                  <strong>
+
+                    ${spokenText}
+
+                  </strong>
+
+                  <div class="journey-line">
+
+                    अजमेर ●━━━━━━━ जयपुर
+
+                  </div>
+
+                </div>
+
+                <div class="card-actions">
+
+                  <button class="action-btn">
+
+                    लाइव स्थिति
+
+                  </button>
+
+                  <button class="action-btn">
+
+                    शेयर
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
           `;
-          box.style.display = "block";
+        };
+
+        recognition.onerror = function(){
+
+          hideMic();
+
+          alert(
+            "आवाज़ समझने में समस्या हुई"
+          );
         };
 
         recognition.onend = hideMic;
-      } else {
-        alert("आपके ब्राउज़र में वॉइस इनपुट सपोर्ट नहीं है।");
+
+      }else{
+
+        alert(
+          "आपके ब्राउज़र में Voice Support उपलब्ध नहीं है"
+        );
       }
     }
 
-    function openMaps(place) {
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(place)}&travelmode=walking`;
-      window.open(mapsUrl, "_blank");
+    // DIRECTIONS BUTTON
+
+    function askDirections(){
+
+      if('webkitSpeechRecognition' in window){
+
+        showMic();
+
+        const recognition =
+          new webkitSpeechRecognition();
+
+        recognition.lang = 'hi-IN';
+
+        recognition.start();
+
+        recognition.onresult = function(event){
+
+          hideMic();
+
+          const spokenText =
+            event.results[0][0].transcript.trim();
+
+          const mapsUrl =
+
+            `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(spokenText)}&travelmode=walking`;
+
+          window.open(mapsUrl,"_blank");
+        };
+
+        recognition.onerror = function(){
+
+          hideMic();
+
+          alert(
+            "आवाज़ समझने में समस्या हुई"
+          );
+        };
+
+        recognition.onend = hideMic;
+      }
     }
 
   </script>
