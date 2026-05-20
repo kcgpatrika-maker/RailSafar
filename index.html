@@ -583,7 +583,66 @@ const trains = [
     intent:intent
   };
 }
-     // TRAIN BUTTON
+function addDelayToTime(timeStr, delayMinutes){
+
+  let [time, modifier] = timeStr.split(" ");
+
+  let [hours, minutes] = time.split(":");
+
+  hours = parseInt(hours);
+  minutes = parseInt(minutes);
+
+  // convert to 24 hour
+
+  if(modifier === "PM" && hours !== 12){
+
+    hours += 12;
+  }
+
+  if(modifier === "AM" && hours === 12){
+
+    hours = 0;
+  }
+
+  // create date object
+
+  const date = new Date();
+
+  date.setHours(hours);
+  date.setMinutes(minutes);
+
+  // add delay
+
+  date.setMinutes(
+    date.getMinutes() + delayMinutes
+  );
+
+  // back to 12 hour
+
+  let newHours = date.getHours();
+
+  let newMinutes = date.getMinutes();
+
+  let ampm = "AM";
+
+  if(newHours >= 12){
+
+    ampm = "PM";
+  }
+
+  newHours = newHours % 12;
+
+  if(newHours === 0){
+
+    newHours = 12;
+  }
+
+  newMinutes =
+    newMinutes.toString().padStart(2,'0');
+
+  return `${newHours}:${newMinutes} ${ampm}`;
+}
+    // TRAIN BUTTON
 
     function askTrainName(){
 
@@ -660,7 +719,17 @@ const trains = [
 
 const delayMinutes =
   Math.floor(Math.random() * 50);
+const expectedArrival =
+  addDelayToTime(
+    stationData.arrival,
+    delayMinutes
+  );
 
+const expectedDeparture =
+  addDelayToTime(
+    stationData.departure,
+    delayMinutes
+  );
 let liveStatus = "";
 
 if(delayMinutes <= 5){
@@ -705,42 +774,65 @@ if(delayMinutes <= 5){
 
               <div class="card-body">
 
-                <div class="time-grid">
+<div class="time-grid">
 
-                  <div class="time-box">
+  <div class="time-box">
 
-                    <div class="time-title">
+    <div class="time-title">
 
-                      🟢 निर्धारित आगमन
+      🟢 निर्धारित आगमन
 
-                    </div>
+    </div>
 
-                    <div class="time-value">
+    <div class="time-value">
 
-                      ${stationData.arrival}
+      ${stationData.arrival}
 
-                    </div>
+    </div>
 
-                  </div>
+    <div style="
+      margin-top:8px;
+      font-size:14px;
+      color:#d97706;
+      font-weight:bold;
+    ">
 
-                  <div class="time-box">
+      अनुमानित:
+      ${expectedArrival}
 
-                    <div class="time-title">
+    </div>
 
-                      🔴 निर्धारित प्रस्थान
+  </div>
 
-                    </div>
+  <div class="time-box">
 
-                    <div class="time-value">
+    <div class="time-title">
 
-                      ${stationData.departure}
+      🔴 निर्धारित प्रस्थान
 
-                    </div>
+    </div>
 
-                  </div>
+    <div class="time-value">
 
-                </div>
+      ${stationData.departure}
 
+    </div>
+
+    <div style="
+      margin-top:8px;
+      font-size:14px;
+      color:#d97706;
+      font-weight:bold;
+    ">
+
+      अनुमानित:
+      ${expectedDeparture}
+
+    </div>
+
+  </div>
+
+</div>
                 <div class="journey-box">
 
                   🎤 आपने पूछा:
