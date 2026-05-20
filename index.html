@@ -783,13 +783,45 @@ else{
 
                 </div>
 
-                <div class="status-strip">
+                let statusBg = "#fff3cd";
+let statusColor = "#856404";
 
-                  ${liveStatus}
+if(delayMinutes <= 5){
 
-                </div>
+  statusBg = "#d4edda";
+  statusColor = "#155724";
 
-              </div>
+}
+else if(delayMinutes <= 30){
+
+  statusBg = "#fff3cd";
+  statusColor = "#856404";
+
+}
+else if(delayMinutes <= 90){
+
+  statusBg = "#ffe5b4";
+  statusColor = "#b45309";
+
+}
+else{
+
+  statusBg = "#f8d7da";
+  statusColor = "#721c24";
+}
+                
+<div
+  class="status-strip"
+  style="
+    background:${statusBg};
+    color:${statusColor};
+  "
+>
+
+  ${liveStatus}
+
+</div>
+</div>
 
               <div class="card-body">
 
