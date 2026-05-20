@@ -737,10 +737,29 @@ if(delayMinutes <= 5){
   liveStatus =
     "✅ ट्रेन समय पर चल रही है";
 
-}else{
+}
+else if(delayMinutes <= 30){
 
   liveStatus =
     `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+
+}
+else if(delayMinutes <= 90){
+
+  liveStatus =
+    `⚠️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+
+}
+else{
+
+  const hrs =
+    Math.floor(delayMinutes / 60);
+
+  const mins =
+    delayMinutes % 60;
+
+  liveStatus =
+    `🚨 ट्रेन लगभग ${hrs} घंटे ${mins} मिनट देरी से चल रही है`;
 }
           // CARD
 
