@@ -398,62 +398,62 @@
 
     // TRAIN DATABASE
 
-    const trains = [
+const trains = [
 
-      {
+  {
 
-        number:"14864",
+    number:"14864",
 
-        hindi:"मरुधर एक्सप्रेस",
+    hindi:"मरुधर एक्सप्रेस",
 
-        english:"Marudhar Express",
+    aliases:[
+      "मरुधर",
+      "मरुधर ट्रेन"
+    ],
 
-        stations:{
+    stations:{
 
-          "जयपुर":{
-
-            arrival:"01:15 AM",
-
-            departure:"01:25 AM"
-
-          },
-
-          "अजमेर":{
-
-            arrival:"11:20 PM",
-
-            departure:"11:30 PM"
-
-          }
-
-        }
-
+      "जयपुर":{
+        aliases:["जयपुर","जयपुर जंक्शन","JP"],
+        arrival:"01:15 AM",
+        departure:"01:25 AM"
       },
 
-      {
-
-        number:"12413",
-
-        hindi:"अमृतसर एक्सप्रेस",
-
-        english:"Amritsar Express",
-
-        stations:{
-
-          "जयपुर":{
-
-            arrival:"07:45 PM",
-
-            departure:"07:50 PM"
-
-          }
-
-        }
-
+      "अजमेर":{
+        aliases:["अजमेर","अजमेर जंक्शन"],
+        arrival:"11:20 PM",
+        departure:"11:30 PM"
       }
 
-    ];
+    }
 
+  },
+
+  {
+
+    number:"12413",
+
+    hindi:"अमृतसर एक्सप्रेस",
+
+    aliases:[
+      "अमृतसर",
+      "अमरसर",
+      "अमृतसर वाली ट्रेन"
+    ],
+
+    stations:{
+
+      "जयपुर":{
+        aliases:["जयपुर","जयपुर जंक्शन","JP"],
+        arrival:"07:45 PM",
+        departure:"07:50 PM"
+      }
+
+    }
+
+  }
+
+];
     // MIC
 
     function showMic(){
@@ -470,82 +470,120 @@
 
     // QUERY PARSER
 
-    function parseTrainQuery(text){
+  function parseTrainQuery(text){
 
-      let intent = "arrival";
+  text = text.trim();
 
-      // arrival
+  let intent = "arrival";
 
-      if(
+  // ARRIVAL
 
-        text.includes("आएगी") ||
+  if(
 
-        text.includes("आगमन") ||
+    text.includes("आएगी") ||
 
-        text.includes("पहुंचेगी")
+    text.includes("आगमन") ||
 
-      ){
+    text.includes("पहुंचेगी") ||
 
-        intent = "arrival";
+    text.includes("टाइम")
+
+  ){
+
+    intent = "arrival";
+  }
+
+  // DEPARTURE
+
+  if(
+
+    text.includes("जाएगी") ||
+
+    text.includes("निकलेगी") ||
+
+    text.includes("प्रस्थान")
+
+  ){
+
+    intent = "departure";
+  }
+
+  // TRAIN MATCH
+
+  let matchedTrain = null;
+
+  for(const train of trains){
+
+    // main name
+
+    if(text.includes(train.hindi)){
+
+      matchedTrain = train;
+
+      break;
+    }
+
+    // aliases
+
+    for(const alias of train.aliases){
+
+      if(text.includes(alias)){
+
+        matchedTrain = train;
+
+        break;
+      }
+    }
+
+    if(matchedTrain) break;
+  }
+
+  // STATION MATCH
+
+  let matchedStation = null;
+
+  if(matchedTrain){
+
+    for(const stationName in matchedTrain.stations){
+
+      const stationData =
+        matchedTrain.stations[stationName];
+
+      // main station
+
+      if(text.includes(stationName)){
+
+        matchedStation = stationName;
+
+        break;
       }
 
-      // departure
+      // aliases
 
-      if(
+      for(const alias of stationData.aliases){
 
-        text.includes("जाएगी") ||
+        if(text.includes(alias)){
 
-        text.includes("निकलेगी") ||
-
-        text.includes("प्रस्थान")
-
-      ){
-
-        intent = "departure";
-      }
-
-      // train detect
-
-      let matchedTrain = null;
-
-      for(const train of trains){
-
-        if(text.includes(train.hindi)){
-
-          matchedTrain = train;
+          matchedStation = stationName;
 
           break;
         }
       }
 
-      // station detect
-
-      let matchedStation = null;
-
-      if(matchedTrain){
-
-        for(const station in matchedTrain.stations){
-
-          if(text.includes(station)){
-
-            matchedStation = station;
-
-            break;
-          }
-        }
-      }
-
-      return{
-
-        train:matchedTrain,
-
-        station:matchedStation,
-
-        intent:intent
-      };
+      if(matchedStation) break;
     }
+  }
 
-    // TRAIN BUTTON
+  return{
+
+    train:matchedTrain,
+
+    station:matchedStation,
+
+    intent:intent
+  };
+}
+     // TRAIN BUTTON
 
     function askTrainName(){
 
@@ -620,9 +658,21 @@
 
           // TEMP LIVE STATUS
 
-          const liveStatus =
-            "⏱️ लगभग 25 मिनट देरी से चल रही है";
+const delayMinutes =
+  Math.floor(Math.random() * 50);
 
+let liveStatus = "";
+
+if(delayMinutes <= 5){
+
+  liveStatus =
+    "✅ ट्रेन समय पर चल रही है";
+
+}else{
+
+  liveStatus =
+    `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+}
           // CARD
 
           box.innerHTML = `
