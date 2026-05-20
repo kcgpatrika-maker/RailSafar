@@ -783,40 +783,7 @@ else{
 
                 </div>
 
-                let statusBg = "#fff3cd";
-let statusColor = "#856404";
-
-if(delayMinutes <= 5){
-
-  statusBg = "#d4edda";
-  statusColor = "#155724";
-
-}
-else if(delayMinutes <= 30){
-
-  statusBg = "#fff3cd";
-  statusColor = "#856404";
-
-}
-else if(delayMinutes <= 90){
-
-  statusBg = "#ffe5b4";
-  statusColor = "#b45309";
-
-}
-else{
-
-  statusBg = "#f8d7da";
-  statusColor = "#721c24";
-}
-                
-<div
-  class="status-strip"
-  style="
-    background:${statusBg};
-    color:${statusColor};
-  "
->
+<div class="status-strip">
 
   ${liveStatus}
 
