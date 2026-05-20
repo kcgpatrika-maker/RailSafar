@@ -467,6 +467,19 @@ const trains = [
       document.getElementById("mic-overlay")
       .style.display = "none";
     }
+    function speakText(text){
+
+  const speech =
+    new SpeechSynthesisUtterance(text);
+
+  speech.lang = "hi-IN";
+
+  speech.rate = 1;
+
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+}
 
     // QUERY PARSER
 
@@ -642,245 +655,224 @@ function addDelayToTime(timeStr, delayMinutes){
 
   return `${newHours}:${newMinutes} ${ampm}`;
 }
-    // TRAIN BUTTON
+// TRAIN BUTTON
 
-    function askTrainName(){
+function askTrainName(){
 
-      if('webkitSpeechRecognition' in window){
+  if('webkitSpeechRecognition' in window){
 
-        showMic();
+    showMic();
 
-        const recognition =
-          new webkitSpeechRecognition();
+    const recognition =
+      new webkitSpeechRecognition();
 
-        recognition.lang = 'hi-IN';
+    recognition.lang = 'hi-IN';
 
-        recognition.start();
+    recognition.start();
 
-        recognition.onresult = function(event){
+    recognition.onresult = function(event){
 
-          hideMic();
+      hideMic();
 
-          const spokenText =
-            event.results[0][0].transcript.trim();
+      const spokenText =
+        event.results[0][0].transcript.trim();
 
-          const result =
-            parseTrainQuery(spokenText);
+      const result =
+        parseTrainQuery(spokenText);
 
-          const box =
-            document.getElementById("output-box");
+      const box =
+        document.getElementById("output-box");
 
-          // TRAIN NOT FOUND
+      // TRAIN NOT FOUND
 
-          if(!result.train){
+      if(!result.train){
 
-            box.innerHTML = `
+        box.innerHTML = `
 
-              <div class="train-card">
+          <div class="train-card">
 
-                <div class="card-body">
+            <div class="card-body">
 
-                  ❌ ट्रेन पहचान में नहीं आई
+              ❌ ट्रेन पहचान में नहीं आई
+
+            </div>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+      // STATION NOT FOUND
+
+      if(!result.station){
+
+        box.innerHTML = `
+
+          <div class="train-card">
+
+            <div class="card-body">
+
+              ❌ स्टेशन पहचान में नहीं आया
+
+            </div>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+      const stationData =
+        result.train.stations[result.station];
+
+      // DELAY ENGINE
+
+      const delayMinutes =
+        Math.floor(Math.random() * 50);
+
+      const expectedArrival =
+        addDelayToTime(
+          stationData.arrival,
+          delayMinutes
+        );
+
+      const expectedDeparture =
+        addDelayToTime(
+          stationData.departure,
+          delayMinutes
+        );
+
+      // LIVE STATUS
+
+      let liveStatus = "";
+
+      if(delayMinutes <= 5){
+
+        liveStatus =
+          "✅ ट्रेन समय पर चल रही है";
+
+      }
+      else if(delayMinutes <= 30){
+
+        liveStatus =
+          `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+
+      }
+      else if(delayMinutes <= 90){
+
+        liveStatus =
+          `⚠️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+
+      }
+      else{
+
+        const hrs =
+          Math.floor(delayMinutes / 60);
+
+        const mins =
+          delayMinutes % 60;
+
+        liveStatus =
+          `🚨 ट्रेन लगभग ${hrs} घंटे ${mins} मिनट देरी से चल रही है`;
+      }
+
+      // VOICE REPLY
+
+      const voiceReply =
+
+        `${result.train.hindi}
+         लगभग
+         ${delayMinutes}
+         मिनट देरी से चल रही है`;
+
+      // CARD
+
+      box.innerHTML = `
+
+        <div class="train-card">
+
+          <div class="card-top">
+
+            <div class="train-name">
+
+              🚆 ${result.train.hindi}
+
+              (${result.train.number})
+
+            </div>
+
+            <div class="station-name">
+
+              📍 ${result.station} जंक्शन
+
+            </div>
+
+            <div class="status-strip">
+
+              ${liveStatus}
+
+            </div>
+
+          </div>
+
+          <div class="card-body">
+
+            <div class="time-grid">
+
+              <div class="time-box">
+
+                <div class="time-title">
+
+                  🟢 निर्धारित आगमन
+
+                </div>
+
+                <div class="time-value">
+
+                  ${stationData.arrival}
+
+                </div>
+
+                <div style="
+                  margin-top:8px;
+                  font-size:14px;
+                  color:#d97706;
+                  font-weight:bold;
+                ">
+
+                  अनुमानित:
+                  ${expectedArrival}
 
                 </div>
 
               </div>
 
-            `;
+              <div class="time-box">
 
-            return;
-          }
+                <div class="time-title">
 
-          // STATION NOT FOUND
-
-          if(!result.station){
-
-            box.innerHTML = `
-
-              <div class="train-card">
-
-                <div class="card-body">
-
-                  ❌ स्टेशन पहचान में नहीं आया
+                  🔴 निर्धारित प्रस्थान
 
                 </div>
 
-              </div>
+                <div class="time-value">
 
-            `;
-
-            return;
-          }
-
-          const stationData =
-            result.train.stations[result.station];
-
-          // TEMP LIVE STATUS
-
-const delayMinutes =
-  Math.floor(Math.random() * 50);
-const expectedArrival =
-  addDelayToTime(
-    stationData.arrival,
-    delayMinutes
-  );
-
-const expectedDeparture =
-  addDelayToTime(
-    stationData.departure,
-    delayMinutes
-  );
-let liveStatus = "";
-
-if(delayMinutes <= 5){
-
-  liveStatus =
-    "✅ ट्रेन समय पर चल रही है";
-
-}
-else if(delayMinutes <= 30){
-
-  liveStatus =
-    `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-
-}
-else if(delayMinutes <= 90){
-
-  liveStatus =
-    `⚠️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-
-}
-else{
-
-  const hrs =
-    Math.floor(delayMinutes / 60);
-
-  const mins =
-    delayMinutes % 60;
-
-  liveStatus =
-    `🚨 ट्रेन लगभग ${hrs} घंटे ${mins} मिनट देरी से चल रही है`;
-}
-          // CARD
-
-          box.innerHTML = `
-
-            <div class="train-card">
-
-              <div class="card-top">
-
-                <div class="train-name">
-
-                  🚆 ${result.train.hindi}
-
-                  (${result.train.number})
+                  ${stationData.departure}
 
                 </div>
 
-                <div class="station-name">
+                <div style="
+                  margin-top:8px;
+                  font-size:14px;
+                  color:#d97706;
+                  font-weight:bold;
+                ">
 
-                  📍 ${result.station} जंक्शन
-
-                </div>
-
-<div class="status-strip">
-
-  ${liveStatus}
-
-</div>
-
-<div class="card-body">
-
-<div class="time-grid">
-
-  <div class="time-box">
-
-    <div class="time-title">
-
-      🟢 निर्धारित आगमन
-
-    </div>
-
-    <div class="time-value">
-
-      ${stationData.arrival}
-
-    </div>
-
-    <div style="
-      margin-top:8px;
-      font-size:14px;
-      color:#d97706;
-      font-weight:bold;
-    ">
-
-      अनुमानित:
-      ${expectedArrival}
-
-    </div>
-
-  </div>
-
-  <div class="time-box">
-
-    <div class="time-title">
-
-      🔴 निर्धारित प्रस्थान
-
-    </div>
-
-    <div class="time-value">
-
-      ${stationData.departure}
-
-    </div>
-
-    <div style="
-      margin-top:8px;
-      font-size:14px;
-      color:#d97706;
-      font-weight:bold;
-    ">
-
-      अनुमानित:
-      ${expectedDeparture}
-
-    </div>
-
-  </div>
-
-</div>
-                <div class="journey-box">
-
-                  🎤 आपने पूछा:
-
-                  <strong>
-
-                    ${spokenText}
-
-                  </strong>
-
-                  <div class="journey-line">
-
-                    अजमेर ●━━━━━━━ जयपुर
-
-                  </div>
-
-                </div>
-
-                <div class="card-actions">
-
-                  <button class="action-btn">
-
-                    लाइव स्थिति
-
-                  </button>
-
-                  <button class="action-btn">
-
-                    शेयर
-
-                  </button>
+                  अनुमानित:
+                  ${expectedDeparture}
 
                 </div>
 
@@ -888,71 +880,113 @@ else{
 
             </div>
 
-          `;
-        };
+            <div class="journey-box">
 
-        recognition.onerror = function(){
+              🎤 आपने पूछा:
 
-          hideMic();
+              <strong>
 
-          alert(
-            "आवाज़ समझने में समस्या हुई"
-          );
-        };
+                ${spokenText}
 
-        recognition.onend = hideMic;
+              </strong>
 
-      }else{
+              <div class="journey-line">
 
-        alert(
-          "आपके ब्राउज़र में Voice Support उपलब्ध नहीं है"
-        );
-      }
-    }
+                अजमेर ●━━━━━━━ जयपुर
 
-    // DIRECTIONS BUTTON
+              </div>
 
-    function askDirections(){
+            </div>
 
-      if('webkitSpeechRecognition' in window){
+            <div class="card-actions">
 
-        showMic();
+              <button class="action-btn">
 
-        const recognition =
-          new webkitSpeechRecognition();
+                लाइव स्थिति
 
-        recognition.lang = 'hi-IN';
+              </button>
 
-        recognition.start();
+              <button class="action-btn">
 
-        recognition.onresult = function(event){
+                शेयर
 
-          hideMic();
+              </button>
 
-          const spokenText =
-            event.results[0][0].transcript.trim();
+            </div>
 
-          const mapsUrl =
+          </div>
 
-            `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(spokenText)}&travelmode=walking`;
+        </div>
 
-          window.open(mapsUrl,"_blank");
-        };
+      `;
 
-        recognition.onerror = function(){
+      // SPEAK
 
-          hideMic();
+      speakText(voiceReply);
+    };
 
-          alert(
-            "आवाज़ समझने में समस्या हुई"
-          );
-        };
+    recognition.onerror = function(){
 
-        recognition.onend = hideMic;
-      }
-    }
+      hideMic();
 
-  </script>
+      alert(
+        "आवाज़ समझने में समस्या हुई"
+      );
+    };
+
+    recognition.onend = hideMic;
+
+  }else{
+
+    alert(
+      "आपके ब्राउज़र में Voice Support उपलब्ध नहीं है"
+    );
+  }
+}
+
+// DIRECTIONS BUTTON
+
+function askDirections(){
+
+  if('webkitSpeechRecognition' in window){
+
+    showMic();
+
+    const recognition =
+      new webkitSpeechRecognition();
+
+    recognition.lang = 'hi-IN';
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+
+      hideMic();
+
+      const spokenText =
+        event.results[0][0].transcript.trim();
+
+      const mapsUrl =
+
+        `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(spokenText)}&travelmode=walking`;
+
+      window.open(mapsUrl,"_blank");
+    };
+
+    recognition.onerror = function(){
+
+      hideMic();
+
+      alert(
+        "आवाज़ समझने में समस्या हुई"
+      );
+    };
+
+    recognition.onend = hideMic;
+  }
+}
+
+</script>
 
 </body>
 </html>
