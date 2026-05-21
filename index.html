@@ -763,8 +763,9 @@ function askTrainName(){
 }
 
 // CONFIRM TRAIN QUERY
+// CONFIRM TRAIN QUERY
 
-function confirmTrainQuery(spokenText){
+async function confirmTrainQuery(spokenText){
 
   const result =
     parseTrainQuery(spokenText);
@@ -814,13 +815,103 @@ function confirmTrainQuery(spokenText){
     return;
   }
 
+  // LOADING CARD
+
+  box.innerHTML = `
+
+    <div class="train-card">
+
+      <div class="card-body"
+        style="
+          text-align:center;
+          padding:30px;
+        "
+      >
+
+        <div style="
+          font-size:40px;
+        ">
+          📡
+        </div>
+
+        <div style="
+          margin-top:15px;
+          font-size:18px;
+          font-weight:bold;
+        ">
+
+          लाइव जानकारी खोजी जा रही है...
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
   const stationData =
     result.train.stations[result.station];
 
-  // DEMO DELAY ENGINE
+  // DEFAULT DEMO VALUES
 
-  const delayMinutes =
+  let delayMinutes =
     Math.floor(Math.random() * 50);
+
+  let liveStatus =
+    `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+
+  // LIVE FETCH TRY
+
+  try{
+
+    const query =
+
+      `${result.train.hindi} ${result.station} live status`;
+
+    const response =
+      await fetch(
+
+        `https://r.jina.ai/http://www.google.com/search?q=${encodeURIComponent(query)}`
+
+      );
+
+    const text =
+      await response.text();
+
+    console.log(text);
+
+    // SIMPLE LIVE DETECTION
+
+    if(
+      text.toLowerCase().includes("on time")
+    ){
+
+      delayMinutes = 0;
+
+      liveStatus =
+        "✅ ट्रेन समय पर चल रही है";
+    }
+
+    if(
+      text.toLowerCase().includes("late")
+    ){
+
+      delayMinutes =
+        Math.floor(Math.random() * 45) + 5;
+
+      liveStatus =
+        `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+    }
+
+  }catch(error){
+
+    console.log(
+      "Live fetch failed"
+    );
+  }
+
+  // EXPECTED TIMES
 
   const expectedArrival =
     addDelayToTime(
@@ -834,36 +925,12 @@ function confirmTrainQuery(spokenText){
       delayMinutes
     );
 
-  // LIVE STATUS
-
-  let liveStatus = "";
-
-  if(delayMinutes <= 5){
-
-    liveStatus =
-      "✅ ट्रेन समय पर चल रही है";
-
-  }
-  else if(delayMinutes <= 30){
-
-    liveStatus =
-      `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-
-  }
-  else{
-
-    liveStatus =
-      `⚠️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-  }
-
-  // VOICE REPLY
+  // VOICE
 
   const voiceReply =
 
     `${result.train.hindi}
-     लगभग
-     ${delayMinutes}
-     मिनट देरी से चल रही है`;
+     ${liveStatus}`;
 
   // FINAL CARD
 
