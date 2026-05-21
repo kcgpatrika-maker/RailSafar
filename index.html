@@ -1005,9 +1005,14 @@ async function testLiveFetch(){
 
   try{
 
+    const query =
+      "amritsar express jaipur";
+
     const response =
       await fetch(
-        "https://r.jina.ai/http://indiarailinfo.com"
+
+        `https://r.jina.ai/http://www.google.com/search?q=${encodeURIComponent(query)}`
+
       );
 
     const text =
@@ -1015,16 +1020,35 @@ async function testLiveFetch(){
 
     console.log(text);
 
-    alert(
-      "Live fetch successful"
-    );
+    // SIMPLE STATUS CHECK
+
+    let result =
+      "कोई लाइव जानकारी नहीं मिली";
+
+    if(
+      text.toLowerCase().includes("late")
+    ){
+
+      result =
+        "⏱️ ट्रेन लेट दिखाई दे रही है";
+    }
+
+    if(
+      text.toLowerCase().includes("on time")
+    ){
+
+      result =
+        "✅ ट्रेन समय पर दिखाई दे रही है";
+    }
+
+    alert(result);
 
   }catch(error){
 
     console.error(error);
 
     alert(
-      "Live fetch failed"
+      "Live parsing failed"
     );
   }
 }
