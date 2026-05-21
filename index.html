@@ -853,13 +853,12 @@ async function confirmTrainQuery(spokenText){
   const stationData =
     result.train.stations[result.station];
 
-  // DEFAULT DEMO VALUES
+  // DEFAULT VALUES
 
-  let delayMinutes =
-    Math.floor(Math.random() * 50);
+let delayMinutes = 0;
 
-  let liveStatus =
-    `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+let liveStatus =
+  "✅ ट्रेन समय पर चल रही है";
 
   // LIVE FETCH TRY
 
@@ -937,15 +936,27 @@ else if(
     }
 
     if(
-      text.toLowerCase().includes("late")
-    ){
+  text.toLowerCase().includes("late by")
+){
 
-      delayMinutes =
-        Math.floor(Math.random() * 45) + 5;
+  // try extracting delay
 
-      liveStatus =
-        `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-    }
+  const lateMatch =
+    text.match(/late by\s+(\d+)/i);
+
+  if(lateMatch){
+
+    delayMinutes =
+      parseInt(lateMatch[1]);
+
+  }else{
+
+    delayMinutes = 15;
+  }
+
+  liveStatus =
+    `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+}
 
   }catch(error){
 
