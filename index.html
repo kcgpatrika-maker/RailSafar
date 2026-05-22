@@ -878,70 +878,119 @@
       const lowerText =
         text.toLowerCase();
 
-      // PARSER
+      // SMART STATION PARSER
 
-      if(
-        lowerText.includes("cancelled")
-      ){
+const stationName =
+  result.station.toLowerCase();
 
-        liveStatus =
-          "❌ ट्रेन रद्द दिखाई दे रही है";
+const stationIndex =
+  lowerText.indexOf(stationName);
 
-        delayMinutes = 0;
-      }
+if(stationIndex !== -1){
 
-      else if(
-        lowerText.includes("rescheduled")
-      ){
+  const nearbyText =
 
-        liveStatus =
-          "🚨 ट्रेन पुनर्निर्धारित दिखाई दे रही है";
+    lowerText.substring(
+      stationIndex,
+      stationIndex + 500
+    );
 
-        delayMinutes = 120;
-      }
+  console.log(
+    "Station Block:",
+    nearbyText
+  );
 
-      else if(
-        lowerText.includes("late by")
-      ){
+  // CANCELLED
 
-        const lateMatch =
+  if(
+    nearbyText.includes("cancelled")
+  ){
 
-          lowerText.match(
-            /late by\s+(\d+)/i
-          );
+    delayMinutes = 0;
 
-        if(lateMatch){
+    liveStatus =
+      "❌ ट्रेन रद्द दिखाई दे रही है";
+  }
 
-          delayMinutes =
-            parseInt(lateMatch[1]);
+  // RESCHEDULED
 
-        }else{
+  else if(
+    nearbyText.includes("rescheduled")
+  ){
 
-          delayMinutes = 20;
-        }
+    delayMinutes = 120;
 
-        liveStatus =
-          `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-      }
+    liveStatus =
+      "🚨 ट्रेन पुनर्निर्धारित दिखाई दे रही है";
+  }
 
-      else if(
-        lowerText.includes("on time")
-      ){
+  // LATE BY
 
-        delayMinutes = 0;
+  else if(
+    nearbyText.includes("late by")
+  ){
 
-        liveStatus =
-          "✅ ट्रेन समय पर चल रही है";
-      }
+    const lateMatch =
 
-      else{
+      nearbyText.match(
+        /late by\s+(\d+)/i
+      );
 
-        delayMinutes = 0;
+    if(lateMatch){
 
-        liveStatus =
-          "📡 लाइव स्थिति स्पष्ट नहीं मिली";
-      }
+      delayMinutes =
+        parseInt(lateMatch[1]);
 
+    }else{
+
+      delayMinutes = 15;
+    }
+
+    liveStatus =
+      `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+  }
+
+  // DELAYED
+
+  else if(
+    nearbyText.includes("delayed")
+  ){
+
+    delayMinutes = 20;
+
+    liveStatus =
+      "⚠️ ट्रेन देरी से चल रही है";
+  }
+
+  // ON TIME
+
+  else if(
+    nearbyText.includes("on time")
+  ){
+
+    delayMinutes = 0;
+
+    liveStatus =
+      "✅ ट्रेन समय पर चल रही है";
+  }
+
+  // NO DATA
+
+  else{
+
+    delayMinutes = 0;
+
+    liveStatus =
+      "📡 स्टेशन की लाइव स्थिति स्पष्ट नहीं मिली";
+  }
+
+}else{
+
+  delayMinutes = 0;
+
+  liveStatus =
+    "📡 स्टेशन ब्लॉक नहीं मिला";
+}
     }catch(error){
 
       console.log(error);
