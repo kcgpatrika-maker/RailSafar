@@ -1015,14 +1015,46 @@ else if(
         "✅ ट्रेन समय पर चल रही है";
     }
 
-    if(
-  text.toLowerCase().includes("late by")
+    // SMART LIVE PARSER
+
+const lowerText =
+  text.toLowerCase();
+
+// CANCELLED
+
+if(
+  lowerText.includes("cancelled")
 ){
 
-  // try extracting delay
+  delayMinutes = 0;
+
+  liveStatus =
+    "❌ ट्रेन रद्द दिखाई दे रही है";
+}
+
+// RESCHEDULED
+
+else if(
+  lowerText.includes("rescheduled")
+){
+
+  delayMinutes = 120;
+
+  liveStatus =
+    "🚨 ट्रेन पुनर्निर्धारित दिखाई दे रही है";
+}
+
+// LATE BY XX MIN
+
+else if(
+  lowerText.includes("late by")
+){
 
   const lateMatch =
-    text.match(/late by\s+(\d+)/i);
+
+    lowerText.match(
+      /late by\s+(\d+)/i
+    );
 
   if(lateMatch){
 
@@ -1036,6 +1068,40 @@ else if(
 
   liveStatus =
     `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
+}
+
+// DELAYED
+
+else if(
+  lowerText.includes("delayed")
+){
+
+  delayMinutes = 20;
+
+  liveStatus =
+    "⚠️ ट्रेन देरी से चल रही है";
+}
+
+// ON TIME
+
+else if(
+  lowerText.includes("on time")
+){
+
+  delayMinutes = 0;
+
+  liveStatus =
+    "✅ ट्रेन समय पर चल रही है";
+}
+
+// NO CLEAR DATA
+
+else{
+
+  delayMinutes = 0;
+
+  liveStatus =
+    "📡 लाइव स्थिति स्पष्ट नहीं मिली";
 }
 
   }catch(error){
