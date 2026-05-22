@@ -402,20 +402,32 @@ const trains = [
 
   {
 
-    number:"12413",
+  number:"12413",
 
-    hindi:"अमृतसर एक्सप्रेस",
+  hindi:"अमृतसर एक्सप्रेस",
 
-    english:"Amritsar Express",
+  english:"Amritsar Express",
 
-    aliases:[
-      "अमृतसर",
-      "अमरसर",
-      "अमृतसर एक्सप्रेस",
-      "amritsar",
-      "amritsar express"
-    ],
+  etrainSlug:"Amritsar-Express-12413",
 
+  aliases:[
+    "अमृतसर",
+    "अमरसर",
+    "अमृतसर वाली ट्रेन"
+  ],
+
+  stations:{
+
+    "जयपुर":{
+      aliases:["जयपुर","जयपुर जंक्शन","JP"],
+      code:"JP",
+      arrival:"07:45 PM",
+      departure:"07:50 PM"
+    }
+
+  }
+
+},
     route:[
       "अजमेर",
       "जयपुर",
@@ -476,18 +488,38 @@ const trains = [
 
   {
 
-    number:"14864",
+  number:"14864",
 
-    hindi:"मरुधर एक्सप्रेस",
+  hindi:"मरुधर एक्सप्रेस",
 
-    english:"Marudhar Express",
+  english:"Marudhar Express",
 
-    aliases:[
-      "मरुधर",
-      "मरुधर एक्सप्रेस",
-      "marudhar"
-    ],
+  etrainSlug:"Marudhar-Express-14864",
 
+  aliases:[
+    "मरुधर",
+    "मरुधर ट्रेन"
+  ],
+
+  stations:{
+
+    "जयपुर":{
+      aliases:["जयपुर","जयपुर जंक्शन","JP"],
+      code:"JP",
+      arrival:"01:15 AM",
+      departure:"01:25 AM"
+    },
+
+    "अजमेर":{
+      aliases:["अजमेर","अजमेर जंक्शन"],
+      code:"AII",
+      arrival:"11:20 PM",
+      departure:"11:30 PM"
+    }
+
+  }
+
+},
     route:[
       "जोधपुर",
       "अजमेर",
@@ -945,23 +977,23 @@ let liveStatus =
   .stations[result.station]
   .code;
 
-const query =
+// REAL ETRAIN FETCH
 
-  `${result.train.number}
-   ${stationCode}
-   live train running status`;
-    const response =
-      await fetch(
+const liveUrl =
 
-        `https://r.jina.ai/http://www.google.com/search?q=${encodeURIComponent(query)}`
+  `https://r.jina.ai/http://etrain.info/train/${result.train.etrainSlug}/live`;
 
-      );
+console.log(liveUrl);
 
-    const text =
-      await response.text();
+const response =
+  await fetch(liveUrl);
 
-    console.log(text);
-// LIVE KEYWORD PARSING
+const text =
+  await response.text();
+
+console.log(text);
+
+    // LIVE KEYWORD PARSING
 
 if(
   text.toLowerCase().includes("rescheduled")
