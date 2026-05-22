@@ -880,9 +880,13 @@
 
       // SMART STATION PARSER
 
-const stationName =
-  result.station.toLowerCase();
+const stationCode =
 
+  result.train
+  .stations[result.station]
+  .code
+  .toLowerCase();
+      
 const stationIndex =
   lowerText.indexOf(stationName);
 
