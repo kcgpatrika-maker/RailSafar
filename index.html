@@ -839,7 +839,6 @@ function askTrainName(){
 }
 
 // CONFIRM TRAIN QUERY
-// CONFIRM TRAIN QUERY
 
 async function confirmTrainQuery(spokenText){
 
@@ -940,12 +939,17 @@ let liveStatus =
 
   try{
 
-    const query =
+    const stationCode =
 
-  `${result.train.hindi}
-   ${result.station}
-   train running status
-   late arrival`;
+  result.train
+  .stations[result.station]
+  .code;
+
+const query =
+
+  `${result.train.number}
+   ${stationCode}
+   live train running status`;
     const response =
       await fetch(
 
