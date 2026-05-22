@@ -402,27 +402,72 @@ const trains = [
 
   {
 
-    number:"14864",
+    number:"12413",
 
-    hindi:"मरुधर एक्सप्रेस",
+    hindi:"अमृतसर एक्सप्रेस",
+
+    english:"Amritsar Express",
 
     aliases:[
-      "मरुधर",
-      "मरुधर ट्रेन"
+      "अमृतसर",
+      "अमरसर",
+      "अमृतसर एक्सप्रेस",
+      "amritsar",
+      "amritsar express"
+    ],
+
+    route:[
+      "अजमेर",
+      "जयपुर",
+      "दिल्ली",
+      "अमृतसर"
     ],
 
     stations:{
 
-      "जयपुर":{
-        aliases:["जयपुर","जयपुर जंक्शन","JP"],
-        arrival:"01:15 AM",
-        departure:"01:25 AM"
+      "अजमेर":{
+
+        code:"AII",
+
+        aliases:[
+          "अजमेर",
+          "ajmer"
+        ],
+
+        arrival:"05:10 PM",
+
+        departure:"05:20 PM"
       },
 
-      "अजमेर":{
-        aliases:["अजमेर","अजमेर जंक्शन"],
-        arrival:"11:20 PM",
-        departure:"11:30 PM"
+      "जयपुर":{
+
+        code:"JP",
+
+        aliases:[
+          "जयपुर",
+          "जयपुर जंक्शन",
+          "jaipur",
+          "jp"
+        ],
+
+        arrival:"07:45 PM",
+
+        departure:"07:50 PM"
+      },
+
+      "दिल्ली":{
+
+        code:"DLI",
+
+        aliases:[
+          "दिल्ली",
+          "नई दिल्ली",
+          "delhi"
+        ],
+
+        arrival:"11:40 PM",
+
+        departure:"11:55 PM"
       }
 
     }
@@ -431,22 +476,53 @@ const trains = [
 
   {
 
-    number:"12413",
+    number:"14864",
 
-    hindi:"अमृतसर एक्सप्रेस",
+    hindi:"मरुधर एक्सप्रेस",
+
+    english:"Marudhar Express",
 
     aliases:[
-      "अमृतसर",
-      "अमरसर",
-      "अमृतसर वाली ट्रेन"
+      "मरुधर",
+      "मरुधर एक्सप्रेस",
+      "marudhar"
+    ],
+
+    route:[
+      "जोधपुर",
+      "अजमेर",
+      "जयपुर"
     ],
 
     stations:{
 
+      "अजमेर":{
+
+        code:"AII",
+
+        aliases:[
+          "अजमेर",
+          "ajmer"
+        ],
+
+        arrival:"11:20 PM",
+
+        departure:"11:30 PM"
+      },
+
       "जयपुर":{
-        aliases:["जयपुर","जयपुर जंक्शन","JP"],
-        arrival:"07:45 PM",
-        departure:"07:50 PM"
+
+        code:"JP",
+
+        aliases:[
+          "जयपुर",
+          "जयपुर जंक्शन",
+          "jaipur"
+        ],
+
+        arrival:"01:15 AM",
+
+        departure:"01:25 AM"
       }
 
     }
