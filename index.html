@@ -761,6 +761,44 @@
       );
     }
   }
+    async function fetchRailData(query){
+
+  try{
+
+    const response =
+      await fetch(
+
+        "https://railsafar-backend.onrender.com/rail-query",
+
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+
+            query:query
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(data);
+
+    return data;
+
+  }catch(error){
+
+    console.log(error);
+
+    return null;
+  }
+}
 
   // CONFIRM TRAIN QUERY
 
