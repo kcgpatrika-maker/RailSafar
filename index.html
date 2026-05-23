@@ -805,8 +805,8 @@
   async function confirmTrainQuery(spokenText){
 
     const result =
-      parseTrainQuery(spokenText);
-
+  await fetchRailData(spokenText);
+    
     const box =
       document.getElementById("output-box");
 
