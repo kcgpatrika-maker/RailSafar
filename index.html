@@ -887,9 +887,12 @@
 
     `;
 
-    const stationData =
-      result.train.stations[result.station];
+    const stationData = {
 
+  arrival:"07:45 PM",
+
+  departure:"07:50 PM"
+};
     let delayMinutes = 0;
 
     let liveStatus =
@@ -1082,7 +1085,7 @@ if(stationIndex !== -1){
 
           <div class="station-name">
 
-            📍 ${result.station} जंक्शन
+            📍 ${result.station.name} जंक्शन
 
           </div>
 
