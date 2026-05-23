@@ -802,413 +802,25 @@
 
   // CONFIRM TRAIN QUERY
 
-  async function confirmTrainQuery(spokenText){
+async function confirmTrainQuery(spokenText){
 
-    const result =
-  await fetchRailData(spokenText);
-    
-    const box =
-      document.getElementById("output-box");
+  const result =
+    await fetchRailData(spokenText);
 
-    // TRAIN NOT FOUND
+  const box =
+    document.getElementById("output-box");
 
-    if(!result.train){
+  // TRAIN NOT FOUND
 
-      box.innerHTML = `
-
-        <div class="train-card">
-
-          <div class="card-body">
-
-            ❌ ट्रेन पहचान में नहीं आई
-
-          </div>
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    // STATION NOT FOUND
-
-    if(!result.station){
-
-      box.innerHTML = `
-
-        <div class="train-card">
-
-          <div class="card-body">
-
-            ❌ स्टेशन पहचान में नहीं आया
-
-          </div>
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-    // LOADING
+  if(!result.train){
 
     box.innerHTML = `
 
       <div class="train-card">
-
-        <div class="card-body"
-          style="
-            text-align:center;
-            padding:30px;
-          "
-        >
-
-          <div style="
-            font-size:40px;
-          ">
-            📡
-          </div>
-
-          <div style="
-            margin-top:15px;
-            font-size:18px;
-            font-weight:bold;
-          ">
-
-            लाइव जानकारी खोजी जा रही है...
-
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-
-    const stationData = {
-
-  arrival:"07:45 PM",
-
-  departure:"07:50 PM"
-};
-    let delayMinutes = 0;
-
-    let liveStatus =
-      "📡 लाइव जानकारी प्राप्त हुई";
-
-    // REAL FETCH
-
-    try{
-
-      const liveUrl =
-
-        `https://r.jina.ai/http://etrain.info/train/${result.train.etrainSlug}/live`;
-
-      console.log(liveUrl);
-
-      const response =
-        await fetch(liveUrl);
-
-      const text =
-        await response.text();
-
-      console.log(text);
-
-      const lowerText =
-        text.toLowerCase();
-
-      // SMART STATION PARSER
-
-const stationCode =
-
-  result.train
-  .stations[result.station]
-  .code
-  .toLowerCase();
-      
-const stationIndex =
-  lowerText.indexOf(stationCode);
-      
-if(stationIndex !== -1){
-
-  const nearbyText =
-
-    lowerText.substring(
-      stationIndex,
-      stationIndex + 500
-    );
-
-  console.log(
-    "Station Block:",
-    nearbyText
-  );
-
-  // CANCELLED
-
-  if(
-    nearbyText.includes("cancelled")
-  ){
-
-    delayMinutes = 0;
-
-    liveStatus =
-      "❌ ट्रेन रद्द दिखाई दे रही है";
-  }
-
-  // RESCHEDULED
-
-  else if(
-    nearbyText.includes("rescheduled")
-  ){
-
-    delayMinutes = 120;
-
-    liveStatus =
-      "🚨 ट्रेन पुनर्निर्धारित दिखाई दे रही है";
-  }
-
-  // LATE BY
-
-  else if(
-    nearbyText.includes("late by")
-  ){
-
-    const lateMatch =
-
-      nearbyText.match(
-        /late by\s+(\d+)/i
-      );
-
-    if(lateMatch){
-
-      delayMinutes =
-        parseInt(lateMatch[1]);
-
-    }else{
-
-      delayMinutes = 15;
-    }
-
-    liveStatus =
-      `⏱️ ट्रेन लगभग ${delayMinutes} मिनट देरी से चल रही है`;
-  }
-
-  // DELAYED
-
-  else if(
-    nearbyText.includes("delayed")
-  ){
-
-    delayMinutes = 20;
-
-    liveStatus =
-      "⚠️ ट्रेन देरी से चल रही है";
-  }
-
-  // ON TIME
-
-  else if(
-    nearbyText.includes("on time")
-  ){
-
-    delayMinutes = 0;
-
-    liveStatus =
-      "✅ ट्रेन समय पर चल रही है";
-  }
-
-  // NO DATA
-
-  else{
-
-    delayMinutes = 0;
-
-    liveStatus =
-      "📡 स्टेशन की लाइव स्थिति स्पष्ट नहीं मिली";
-  }
-
-}else{
-
-  delayMinutes = 0;
-
-  liveStatus =
-    "📡 स्टेशन ब्लॉक नहीं मिला";
-}
-    }catch(error){
-
-  console.log(error);
-
-  liveStatus =
-    "📡 लाइव जानकारी अभी उपलब्ध नहीं है";
-
-  delayMinutes = 0;
-}
-
-    // EXPECTED TIMES
-
-    const expectedArrival =
-      addDelayToTime(
-        stationData.arrival,
-        delayMinutes
-      );
-
-    const expectedDeparture =
-      addDelayToTime(
-        stationData.departure,
-        delayMinutes
-      );
-
-    // VOICE
-
-    const voiceReply =
-
-      `${result.train.hindi}
-       ${liveStatus}`;
-
-    // FINAL CARD
-
-    box.innerHTML = `
-
-      <div class="train-card">
-
-        <div class="card-top">
-
-          <div class="train-name">
-
-            🚆 ${result.train.hindi}
-
-            (${result.train.number})
-
-          </div>
-
-          <div class="station-name">
-
-            📍 ${result.station.name} जंक्शन
-
-          </div>
-
-          <div class="status-strip">
-
-            ${liveStatus}
-
-          </div>
-
-        </div>
 
         <div class="card-body">
 
-          <div class="time-grid">
-
-            <div class="time-box">
-
-              <div class="time-title">
-
-                🟢 निर्धारित आगमन
-
-              </div>
-
-              <div class="time-value">
-
-                ${stationData.arrival}
-
-              </div>
-
-              <div style="
-                margin-top:8px;
-                font-size:14px;
-                color:#d97706;
-                font-weight:bold;
-              ">
-
-                अनुमानित:
-                ${expectedArrival}
-
-              </div>
-
-            </div>
-
-            <div class="time-box">
-
-              <div class="time-title">
-
-                🔴 निर्धारित प्रस्थान
-
-              </div>
-
-              <div class="time-value">
-
-                ${stationData.departure}
-
-              </div>
-
-              <div style="
-                margin-top:8px;
-                font-size:14px;
-                color:#d97706;
-                font-weight:bold;
-              ">
-
-                अनुमानित:
-                ${expectedDeparture}
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="journey-box">
-
-            🎤 आपने पूछा:
-
-            <strong>
-
-              ${spokenText}
-
-            </strong>
-
-            <div class="journey-line">
-
-              अजमेर ●━━━━━━━ जयपुर
-
-            </div>
-            <div style="margin-top:18px;">
-
-  <a
-    href="https://etrain.info/train/${result.train.etrainSlug}/live"
-    target="_blank"
-    style="
-      display:block;
-      width:100%;
-      text-decoration:none;
-    "
-  >
-
-    <button
-      style="
-        width:100%;
-        border:none;
-        background:#d32f2f;
-        color:white;
-        padding:14px;
-        border-radius:12px;
-        font-size:16px;
-        font-weight:bold;
-        cursor:pointer;
-      "
-    >
-
-      🔴 रेलवे लाइव स्टेटस देखें
-
-    </button>
-
-  </a>
-
-</div>
-
-          </div>
+          ❌ ट्रेन पहचान में नहीं आई
 
         </div>
 
@@ -1216,9 +828,268 @@ if(stationIndex !== -1){
 
     `;
 
-    speakText(voiceReply);
+    return;
   }
 
+  // STATION NOT FOUND
+
+  if(!result.station){
+
+    box.innerHTML = `
+
+      <div class="train-card">
+
+        <div class="card-body">
+
+          ❌ स्टेशन पहचान में नहीं आया
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+  // LOADING CARD
+
+  box.innerHTML = `
+
+    <div class="train-card">
+
+      <div class="card-body"
+        style="
+          text-align:center;
+          padding:30px;
+        "
+      >
+
+        <div style="
+          font-size:40px;
+        ">
+          📡
+        </div>
+
+        <div style="
+          margin-top:15px;
+          font-size:18px;
+          font-weight:bold;
+        ">
+
+          लाइव जानकारी खोजी जा रही है...
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+  // SMALL WAIT
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 1200)
+  );
+
+  // LIVE DATA FROM BACKEND
+
+  let liveStatus =
+
+    result.liveStatus ||
+
+    "📡 लाइव स्थिति स्पष्ट नहीं मिली";
+
+  let delayMinutes =
+
+    result.delayMinutes || 0;
+
+  // STATIC TIMES
+
+  const stationData = {
+
+    arrival:"07:45 PM",
+
+    departure:"07:50 PM"
+  };
+
+  // EXPECTED TIMES
+
+  const expectedArrival =
+    addDelayToTime(
+      stationData.arrival,
+      delayMinutes
+    );
+
+  const expectedDeparture =
+    addDelayToTime(
+      stationData.departure,
+      delayMinutes
+    );
+
+  // VOICE
+
+  const voiceReply =
+
+    `${result.train.hindi}
+     ${liveStatus}`;
+
+  // FINAL CARD
+
+  box.innerHTML = `
+
+    <div class="train-card">
+
+      <div class="card-top">
+
+        <div class="train-name">
+
+          🚆 ${result.train.hindi}
+
+          (${result.train.number})
+
+        </div>
+
+        <div class="station-name">
+
+          📍 ${result.station.name} जंक्शन
+
+        </div>
+
+        <div class="status-strip">
+
+          ${liveStatus}
+
+        </div>
+
+      </div>
+
+      <div class="card-body">
+
+        <div class="time-grid">
+
+          <div class="time-box">
+
+            <div class="time-title">
+
+              🟢 निर्धारित आगमन
+
+            </div>
+
+            <div class="time-value">
+
+              ${stationData.arrival}
+
+            </div>
+
+            <div style="
+              margin-top:8px;
+              font-size:14px;
+              color:#d97706;
+              font-weight:bold;
+            ">
+
+              अनुमानित:
+              ${expectedArrival}
+
+            </div>
+
+          </div>
+
+          <div class="time-box">
+
+            <div class="time-title">
+
+              🔴 निर्धारित प्रस्थान
+
+            </div>
+
+            <div class="time-value">
+
+              ${stationData.departure}
+
+            </div>
+
+            <div style="
+              margin-top:8px;
+              font-size:14px;
+              color:#d97706;
+              font-weight:bold;
+            ">
+
+              अनुमानित:
+              ${expectedDeparture}
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="journey-box">
+
+          🎤 आपने पूछा:
+
+          <strong>
+
+            ${spokenText}
+
+          </strong>
+
+          <div class="journey-line">
+
+            लाइव रेलवे स्थिति प्राप्त
+
+          </div>
+
+        </div>
+
+        <div class="card-actions">
+
+          <button
+            class="action-btn"
+            onclick="
+              window.open(
+                'https://www.railyatri.in/live-train-status/${result.train.number}',
+                '_blank'
+              )
+            "
+          >
+
+            🚉 लाइव स्रोत
+
+          </button>
+
+          <button
+            class="action-btn"
+            onclick="
+              navigator.share({
+                title:'RailSafar',
+                text:'${result.train.hindi} ${liveStatus}',
+                url:window.location.href
+              })
+            "
+          >
+
+            📤 शेयर
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+  // SPEAK
+
+  speakText(voiceReply);
+}
+
+    
   // DIRECTIONS BUTTON
 
   function askDirections(){
