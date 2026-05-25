@@ -1,1 +1,265 @@
+*{
+  box-sizing:border-box;
+}
 
+body{
+  margin:0;
+  padding:0;
+  font-family:'Mukta', sans-serif;
+  background:#f3f4f6;
+  color:#222;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  padding:12px 15px;
+  background:#ffffff;
+  border-bottom:1px solid #ddd;
+}
+
+.logo{
+  display:flex;
+  align-items:flex-start;
+}
+
+.logo-icon{
+  font-size:34px;
+  margin-right:10px;
+}
+
+.title{
+  font-size:28px;
+  font-weight:bold;
+  line-height:1;
+}
+
+.rail{
+  color:#d32f2f;
+}
+
+.safar{
+  color:#222;
+}
+
+.tagline{
+  font-size:14px;
+  color:#666;
+  margin-top:3px;
+}
+
+.share-container{
+  text-align:center;
+}
+
+.share-btn{
+  border:none;
+  background:#1976d2;
+  color:white;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.share-text{
+  font-size:12px;
+  color:#555;
+  margin-top:4px;
+}
+
+.button-container{
+  margin-top:35px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:22px;
+  padding-bottom:40px;
+}
+
+.circle-btn{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  transition:0.2s;
+  box-shadow:0 5px 12px rgba(0,0,0,0.15);
+}
+
+.circle-btn:hover{
+  transform:scale(1.04);
+}
+
+.train-btn{
+  background:#dff5e6;
+}
+
+.directions-btn{
+  background:#ffe6c7;
+}
+
+.btn-icon{
+  font-size:36px;
+  margin-bottom:8px;
+}
+
+.btn-text{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.btn-hint{
+  font-size:14px;
+  color:#555;
+  margin-top:-12px;
+}
+
+.output-box{
+  width:92%;
+  max-width:420px;
+}
+
+.train-card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.12);
+}
+
+.card-top{
+  background:#1565c0;
+  color:white;
+  padding:16px;
+}
+
+.train-name{
+  font-size:22px;
+  font-weight:bold;
+  line-height:1.3;
+}
+
+.station-name{
+  font-size:17px;
+  margin-top:8px;
+}
+
+.status-strip{
+  margin-top:12px;
+  background:#fff3cd;
+  color:#856404;
+  padding:10px;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.card-body{
+  padding:16px;
+}
+
+.time-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.time-box{
+  background:#f7f7f7;
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+
+.time-title{
+  font-size:14px;
+  color:#555;
+}
+
+.time-value{
+  font-size:20px;
+  font-weight:bold;
+  margin-top:4px;
+}
+
+.journey-box{
+  margin-top:18px;
+  background:#eef4ff;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.journey-line{
+  margin-top:8px;
+  font-weight:bold;
+  color:#1565c0;
+}
+
+.card-actions{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.action-btn{
+  flex:1;
+  border:none;
+  background:#1565c0;
+  color:white;
+  padding:10px;
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+.mic-overlay{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,150,136,0.95);
+  color:white;
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  animation:pulse 1.5s infinite;
+  box-shadow:0 0 25px rgba(0,0,0,0.35);
+}
+
+.mic-icon{
+  font-size:48px;
+}
+
+.mic-text{
+  margin-top:10px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+@keyframes pulse{
+
+  0%{
+    transform:translate(-50%,-50%) scale(1);
+  }
+
+  50%{
+    transform:translate(-50%,-50%) scale(1.08);
+  }
+
+  100%{
+    transform:translate(-50%,-50%) scale(1);
+  }
+}
