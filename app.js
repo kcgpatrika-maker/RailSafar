@@ -10,42 +10,6 @@ async function confirmTrainQuery(
       "output-box"
     );
 
-  // LOADING CARD
-
-  box.innerHTML = `
-
-    <div class="train-card">
-
-      <div
-        class="card-body"
-        style="
-          text-align:center;
-          padding:30px;
-        "
-      >
-
-        <div style="
-          font-size:40px;
-        ">
-          📡
-        </div>
-
-        <div style="
-          margin-top:15px;
-          font-size:18px;
-          font-weight:bold;
-        ">
-
-          लाइव जानकारी खोजी जा रही है...
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
   // FETCH DATA
 
   const result =
