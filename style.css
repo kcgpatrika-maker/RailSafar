@@ -263,3 +263,72 @@ header{
     transform:translate(-50%,-50%) scale(1);
   }
 }
+/* EXTRA FEATURE BUTTONS */
+
+.extra-buttons{
+
+  width:92%;
+
+  max-width:420px;
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:12px;
+
+  margin-top:10px;
+}
+
+.extra-btn{
+
+  border:none;
+
+  background:white;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.10);
+
+  transition:0.2s;
+}
+
+.extra-btn:hover{
+
+  transform:translateY(-2px);
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+  .circle-btn{
+
+    width:150px;
+
+    height:150px;
+  }
+
+  .btn-text{
+
+    font-size:18px;
+  }
+
+  .train-name{
+
+    font-size:20px;
+  }
+
+  .time-value{
+
+    font-size:18px;
+  }
+}
