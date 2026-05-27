@@ -153,11 +153,134 @@ function openTimeTable(){
 
 function openRailWiki(){
 
+  const box =
+
+    document.getElementById(
+      "output-box"
+    );
+
+  box.innerHTML = `
+
+    <div class="train-card">
+
+      <div class="card-top">
+
+        <div class="train-name">
+
+          📘 रेलवे जानकारी केंद्र
+
+        </div>
+
+        <div class="station-name">
+
+          रेलवे जोन, मंडल और महत्वपूर्ण लिंक
+
+        </div>
+
+      </div>
+
+      <div class="card-body">
+
+        <div class="wiki-list">
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Indian_Railways')"
+          >
+
+            🇮🇳 Indian Railways
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('North_Western_Railway')"
+          >
+
+            🚆 North Western Railway
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Western_Railway_zone')"
+          >
+
+            🚉 Western Railway
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('North_Central_Railway')"
+          >
+
+            🛤️ North Central Railway
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Jaipur_railway_division')"
+          >
+
+            📍 Jaipur Division
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Ajmer_railway_division')"
+          >
+
+            📍 Ajmer Division
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Railway_Board_(India)')"
+          >
+
+            🏛️ Railway Board
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('IRCTC')"
+          >
+
+            🎫 IRCTC
+
+          </button>
+
+          <button
+            class="wiki-item"
+            onclick="openWikiPage('Dedicated_Freight_Corridor_Corporation_of_India')"
+          >
+
+            🚛 Freight Corridor
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+// OPEN WIKI PAGE
+
+function openWikiPage(page){
+
   window.open(
 
-    "https://en.wikipedia.org/wiki/Indian_Railways",
+    `https://en.wikipedia.org/wiki/${page}`,
 
     "_blank"
-
   );
 }
