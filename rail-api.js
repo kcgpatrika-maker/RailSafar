@@ -28,6 +28,8 @@ async function fetchRailData(query){
 
   try{
 
+    // REQUEST
+
     const response =
 
       await fetch(
@@ -49,7 +51,24 @@ async function fetchRailData(query){
         }
       );
 
+    // INVALID RESPONSE
+
+    if(!response.ok){
+
+      console.log(
+
+        "Server Error:",
+        response.status
+
+      );
+
+      return null;
+    }
+
+    // JSON
+
     const data =
+
       await response.json();
 
     console.log(
@@ -57,15 +76,88 @@ async function fetchRailData(query){
       data
     );
 
+    // EMPTY
+
+    if(!data){
+
+      return null;
+    }
+
     return data;
 
   }catch(error){
 
     console.log(
+
       "Rail API Error:",
       error
     );
 
     return null;
   }
+}
+
+// OPEN LIVE STATUS
+
+function openLiveStatus(trainNumber){
+
+  window.open(
+
+    `https://www.railyatri.in/live-train-status/${trainNumber}`,
+
+    "_blank"
+
+  );
+}
+
+// OPEN PNR
+
+function openPNR(){
+
+  window.open(
+
+    "https://www.railyatri.in/pnr-status",
+
+    "_blank"
+
+  );
+}
+
+// OPEN TICKET
+
+function openTicketBooking(){
+
+  window.open(
+
+    "https://www.irctc.co.in/nget/train-search",
+
+    "_blank"
+
+  );
+}
+
+// OPEN TIME TABLE
+
+function openTimeTable(){
+
+  window.open(
+
+    "https://enquiry.indianrail.gov.in/mntes/",
+
+    "_blank"
+
+  );
+}
+
+// OPEN RAILWAY WIKI
+
+function openRailWiki(){
+
+  window.open(
+
+    "https://en.wikipedia.org/wiki/Indian_Railways",
+
+    "_blank"
+
+  );
 }
