@@ -332,3 +332,96 @@ header{
     font-size:18px;
   }
 }
+/* EXTRA FEATURE BUTTONS */
+
+.extra-buttons{
+
+  width:92%;
+
+  max-width:420px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:14px;
+
+  margin-top:10px;
+}
+
+/* FULL BUTTON */
+
+.full-btn{
+
+  width:100%;
+
+  border:none;
+
+  padding:16px;
+
+  border-radius:16px;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  color:white;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.12);
+}
+
+/* ROW */
+
+.half-row{
+
+  display:flex;
+
+  gap:12px;
+}
+
+/* HALF BUTTON */
+
+.half-btn{
+
+  flex:1;
+
+  border:none;
+
+  padding:15px;
+
+  border-radius:16px;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  color:white;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.12);
+}
+
+/* COLORS */
+
+.timetable-btn{
+
+  background:#1565c0;
+}
+
+.pnr-btn{
+
+  background:#00897b;
+}
+
+.ticket-btn{
+
+  background:#ef6c00;
+}
+
+.wiki-btn{
+
+  background:#6a1b9a;
+}
