@@ -167,17 +167,11 @@ function openRailWiki(){
 
         <div class="train-name">
 
-          📘 रेलवे जानकारी केंद्र
+          📘 रेलवे का विकीपीडिया
 
         </div>
 
-        <div class="station-name">
-
-          रेलवे जोन, मंडल और महत्वपूर्ण लिंक
-
         </div>
-
-      </div>
 
       <div class="card-body">
 
