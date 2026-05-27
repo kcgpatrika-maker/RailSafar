@@ -80,14 +80,7 @@ async function confirmTrainQuery(
     return;
   }
 
-  // LIVE STATUS
-
-  const liveStatus =
-
-    result.liveStatus ||
-
-    "📡 लाइव स्थिति उपलब्ध नहीं है";
-
+  
   // DELAY
 
   const delayMinutes =
