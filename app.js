@@ -1,3 +1,5 @@
+// CONFIRM TRAIN QUERY
+
 async function confirmTrainQuery(
   spokenText
 ){
@@ -7,29 +9,6 @@ async function confirmTrainQuery(
     document.getElementById(
       "output-box"
     );
-
-  // LOADING
-
-  box.innerHTML = `
-
-    <div class="train-card">
-
-      <div class="card-body"
-        style="
-          text-align:center;
-          padding:25px;
-          font-size:18px;
-          font-weight:bold;
-        "
-      >
-
-        🚆 जानकारी प्राप्त की जा रही है...
-
-      </div>
-
-    </div>
-
-  `;
 
   // FETCH DATA
 
@@ -101,14 +80,7 @@ async function confirmTrainQuery(
     return;
   }
 
-  // LIVE STATUS
-
-  const liveStatus =
-
-    result.liveStatus ||
-
-    "📡 लाइव स्थिति उपलब्ध नहीं है";
-
+  
   // DELAY
 
   const delayMinutes =
@@ -130,36 +102,28 @@ async function confirmTrainQuery(
   const arrivalTime =
 
     station.arrival ||
-    "--";
+    "N/A";
 
   const departureTime =
 
     station.departure ||
-    "--";
+    "N/A";
 
   // EXPECTED
 
   const expectedArrival =
 
-    arrivalTime !== "--"
-
-    ? addDelayToTime(
-        arrivalTime,
-        delayMinutes
-      )
-
-    : "--";
+    addDelayToTime(
+      arrivalTime,
+      delayMinutes
+    );
 
   const expectedDeparture =
 
-    departureTime !== "--"
-
-    ? addDelayToTime(
-        departureTime,
-        delayMinutes
-      )
-
-    : "--";
+    addDelayToTime(
+      departureTime,
+      delayMinutes
+    );
 
   // FINAL CARD
 
@@ -277,7 +241,7 @@ async function confirmTrainQuery(
             class="action-btn"
             onclick="
               window.open(
-                '${result.sourceUrl}',
+                'https://www.railyatri.in/live-train-status/${train.number}',
                 '_blank'
               )
             "
@@ -317,5 +281,19 @@ async function confirmTrainQuery(
     `${train.hindi}
      ${liveStatus}`
 
+  );
+}
+
+// CONFIRM DIRECTION
+
+function confirmDirection(place){
+
+  const mapsUrl =
+
+    `https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${encodeURIComponent(place)}&travelmode=walking`;
+
+  window.open(
+    mapsUrl,
+    "_blank"
   );
 }
