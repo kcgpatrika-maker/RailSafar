@@ -111,19 +111,29 @@ async function confirmTrainQuery(
 
   // EXPECTED
 
-  const expectedArrival =
+  let expectedArrival = "N/A";
 
-    addDelayToTime(
-      arrivalTime,
-      delayMinutes
-    );
+  let expectedDeparture = "N/A";
 
-  const expectedDeparture =
+  if(arrivalTime !== "N/A"){
 
-    addDelayToTime(
-      departureTime,
-      delayMinutes
-    );
+    expectedArrival =
+
+      addDelayToTime(
+        arrivalTime,
+        delayMinutes
+      );
+  }
+
+  if(departureTime !== "N/A"){
+
+    expectedDeparture =
+
+      addDelayToTime(
+        departureTime,
+        delayMinutes
+      );
+  }
 
   // FINAL CARD
 
