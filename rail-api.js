@@ -28,8 +28,6 @@ async function fetchRailData(query){
 
   try{
 
-    // REQUEST
-
     const response =
 
       await fetch(
@@ -51,21 +49,15 @@ async function fetchRailData(query){
         }
       );
 
-    // INVALID RESPONSE
-
     if(!response.ok){
 
       console.log(
-
         "Server Error:",
         response.status
-
       );
 
       return null;
     }
-
-    // JSON
 
     const data =
 
@@ -75,8 +67,6 @@ async function fetchRailData(query){
       "Rail API:",
       data
     );
-
-    // EMPTY
 
     if(!data){
 
@@ -88,7 +78,6 @@ async function fetchRailData(query){
   }catch(error){
 
     console.log(
-
       "Rail API Error:",
       error
     );
@@ -149,6 +138,10 @@ function openTimeTable(){
   );
 }
 
+// WIKI STATE
+
+let wikiOpened = false;
+
 // OPEN RAILWAY WIKI
 
 function openRailWiki(){
@@ -159,19 +152,22 @@ function openRailWiki(){
       "output-box"
     );
 
+  // TOGGLE
+
+  if(wikiOpened){
+
+    box.innerHTML = "";
+
+    wikiOpened = false;
+
+    return;
+  }
+
+  wikiOpened = true;
+
   box.innerHTML = `
 
     <div class="train-card">
-
-      <div class="card-top">
-
-        <div class="train-name">
-
-          📘 रेलवे का विकीपीडिया
-
-        </div>
-
-        </div>
 
       <div class="card-body">
 
@@ -258,6 +254,19 @@ function openRailWiki(){
 
           </button>
 
+          <button
+            class="action-btn"
+            style="
+              margin-top:15px;
+              width:100%;
+            "
+            onclick="closeRailWiki()"
+          >
+
+            ❌ बंद करें
+
+          </button>
+
         </div>
 
       </div>
@@ -265,6 +274,17 @@ function openRailWiki(){
     </div>
 
   `;
+}
+
+// CLOSE WIKI
+
+function closeRailWiki(){
+
+  document.getElementById(
+    "output-box"
+  ).innerHTML = "";
+
+  wikiOpened = false;
 }
 
 // OPEN WIKI PAGE
