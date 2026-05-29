@@ -10,9 +10,31 @@ async function confirmTrainQuery(
       "output-box"
     );
 
+  // LOADING
+
+  box.innerHTML = `
+
+    <div class="train-card">
+
+      <div class="card-body"
+        style="
+          text-align:center;
+          padding:25px;
+        "
+      >
+
+        जानकारी प्राप्त की जा रही है...
+
+      </div>
+
+    </div>
+
+  `;
+
   // FETCH DATA
 
   const result =
+
     await fetchRailData(
       spokenText
     );
@@ -59,34 +81,6 @@ async function confirmTrainQuery(
     return;
   }
 
-  // STATION NOT FOUND
-
-  if(!result.station){
-
-    box.innerHTML = `
-
-      <div class="train-card">
-
-        <div class="card-body">
-
-          ❌ स्टेशन पहचान में नहीं आया
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-  
-  // DELAY
-
-  const delayMinutes =
-
-    result.delayMinutes || 0;
-
   // TRAIN
 
   const train =
@@ -95,27 +89,43 @@ async function confirmTrainQuery(
   // STATION
 
   const station =
-    result.station;
+    result.station || {};
+
+  // LIVE STATUS
+
+  const liveStatus =
+
+    result.liveStatus ||
+
+    "📡 लाइव स्थिति उपलब्ध नहीं है";
+
+  // DELAY
+
+  const delayMinutes =
+
+    result.delayMinutes || 0;
 
   // TIMES
 
   const arrivalTime =
 
     station.arrival ||
-    "N/A";
+    "--";
 
   const departureTime =
 
     station.departure ||
-    "N/A";
+    "--";
 
-  // EXPECTED
+  // EXPECTED TIMES
 
-  let expectedArrival = "N/A";
+  let expectedArrival =
+    "--";
 
-  let expectedDeparture = "N/A";
+  let expectedDeparture =
+    "--";
 
-  if(arrivalTime !== "N/A"){
+  if(arrivalTime !== "--"){
 
     expectedArrival =
 
@@ -125,7 +135,7 @@ async function confirmTrainQuery(
       );
   }
 
-  if(departureTime !== "N/A"){
+  if(departureTime !== "--"){
 
     expectedDeparture =
 
@@ -153,7 +163,7 @@ async function confirmTrainQuery(
 
         <div class="station-name">
 
-          📍 ${station.name}
+          📍 ${station.name || "स्टेशन"}
 
         </div>
 
@@ -173,7 +183,7 @@ async function confirmTrainQuery(
 
             <div class="time-title">
 
-              🟢 निर्धारित आगमन
+              🟢 आगमन
 
             </div>
 
@@ -201,7 +211,7 @@ async function confirmTrainQuery(
 
             <div class="time-title">
 
-              🔴 निर्धारित प्रस्थान
+              🔴 प्रस्थान
 
             </div>
 
