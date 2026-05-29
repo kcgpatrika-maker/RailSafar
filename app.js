@@ -305,12 +305,15 @@ async function confirmTrainQuery(
     .replace("🚨","")
     .replace("📡","");
 
-  speakText(
+    speakText(
 
     `${train.hindi}
      ${cleanVoice}`
 
   );
+
+}
+ 
 // CONFIRM DIRECTION
 
 function confirmDirection(place){
