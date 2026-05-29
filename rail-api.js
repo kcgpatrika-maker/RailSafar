@@ -148,9 +148,9 @@ function openRailWiki(){
 
   const box =
 
-    document.getElementById(
-      "output-box"
-    );
+  document.getElementById(
+    "wiki-container"
+  );
 
     // CLOSE
 
