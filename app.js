@@ -305,7 +305,7 @@ async function confirmTrainQuery(
     .replace("🚨","")
     .replace("📡","");
 
-    speakText(
+      speakText(
 
     `${train.hindi}
      ${cleanVoice}`
@@ -313,7 +313,7 @@ async function confirmTrainQuery(
   );
 
 }
- 
+
 // CONFIRM DIRECTION
 
 function confirmDirection(place){
@@ -326,4 +326,5 @@ function confirmDirection(place){
     mapsUrl,
     "_blank"
   );
+
 }
