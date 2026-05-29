@@ -131,7 +131,7 @@ function openTimeTable(){
 
   window.open(
 
-    "https://enquiry.indianrail.gov.in/mntes/",
+    "https://www.railyatri.in/trains-between-stations",
 
     "_blank"
 
