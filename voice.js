@@ -20,9 +20,20 @@ function hideMic(){
 
 function speakText(text){
 
+  const cleanText =
+
+    text
+      .replace("📡","")
+      .replace("⏱️","")
+      .replace("✅","")
+      .replace("❌","")
+      .replace("🚨","");
+
   const speech =
 
-    new SpeechSynthesisUtterance(text);
+    new SpeechSynthesisUtterance(
+      cleanText
+    );
 
   speech.lang = "hi-IN";
 
@@ -48,10 +59,6 @@ function askTrainName(){
       new webkitSpeechRecognition();
 
     recognition.lang = 'hi-IN';
-
-    recognition.interimResults = false;
-
-    recognition.maxAlternatives = 1;
 
     recognition.start();
 
@@ -136,30 +143,19 @@ function askTrainName(){
 
       // BUTTON EVENT
 
-      setTimeout(() => {
+      document
+        .getElementById(
+          "confirm-train-btn"
+        )
+        .addEventListener(
+          "click",
+          function(){
 
-        const confirmBtn =
-
-          document.getElementById(
-            "confirm-train-btn"
-          );
-
-        if(confirmBtn){
-
-          confirmBtn.addEventListener(
-            "click",
-            () => {
-
-              confirmTrainQuery(
-                spokenText
-              );
-
-            }
-          );
-        }
-
-      }, 100);
-
+            confirmTrainQuery(
+              spokenText
+            );
+          }
+        );
     };
 
     recognition.onerror = function(){
@@ -176,7 +172,7 @@ function askTrainName(){
   }else{
 
     alert(
-      "आपके ब्राउज़र में Voice Support उपलब्ध नहीं है"
+      "Voice Support उपलब्ध नहीं है"
     );
   }
 }
@@ -215,8 +211,6 @@ function askDirections(){
           "output-box"
         );
 
-      // VERIFY CARD
-
       box.innerHTML = `
 
         <div class="train-card">
@@ -254,7 +248,7 @@ function askDirections(){
 
               <button
                 class="action-btn"
-                onclick='confirmDirection(${JSON.stringify(spokenText)})'
+                onclick="confirmDirection('${spokenText}')"
               >
 
                 ✅ हाँ
