@@ -60,6 +60,10 @@ function askTrainName(){
 
     recognition.lang = 'hi-IN';
 
+    recognition.interimResults = false;
+
+    recognition.maxAlternatives = 1;
+
     recognition.start();
 
     recognition.onresult = function(event){
@@ -141,21 +145,32 @@ function askTrainName(){
 
       `;
 
-      // BUTTON EVENT
+     // BUTTON EVENT
 
-      document
-        .getElementById(
-          "confirm-train-btn"
-        )
-        .addEventListener(
-          "click",
-          function(){
+      setTimeout(() => {
 
-            confirmTrainQuery(
-              spokenText
-            );
-          }
-        );
+        const confirmBtn =
+
+          document.getElementById(
+            "confirm-train-btn"
+          );
+
+        if(confirmBtn){
+
+          confirmBtn.addEventListener(
+            "click",
+            () => {
+
+              confirmTrainQuery(
+                spokenText
+              );
+
+            }
+          );
+        }
+
+      }, 100);
+
     };
 
     recognition.onerror = function(){
