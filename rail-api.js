@@ -154,14 +154,14 @@ function openRailWiki(){
 
     // CLOSE
 
-  if(wikiOpen){
+  if(wikiOpened){
 
-    box.innerHTML = "";
+  box.innerHTML = "";
 
-    wikiOpen = false;
+  wikiOpened = false;
 
-    return;
-  }
+  return;
+}
 
   wikiOpened = true;
 
