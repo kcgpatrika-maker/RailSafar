@@ -152,13 +152,13 @@ function openRailWiki(){
       "output-box"
     );
 
-  // TOGGLE
+    // CLOSE
 
-  if(wikiOpened){
+  if(wikiOpen){
 
     box.innerHTML = "";
 
-    wikiOpened = false;
+    wikiOpen = false;
 
     return;
   }
@@ -251,19 +251,6 @@ function openRailWiki(){
           >
 
             🚛 Freight Corridor
-
-          </button>
-
-          <button
-            class="action-btn"
-            style="
-              margin-top:15px;
-              width:100%;
-            "
-            onclick="closeRailWiki()"
-          >
-
-            ❌ बंद करें
 
           </button>
 
