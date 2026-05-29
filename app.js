@@ -296,14 +296,21 @@ async function confirmTrainQuery(
 
   // VOICE
 
+    const cleanVoice =
+
+    liveStatus
+    .replace("⏱️","")
+    .replace("✅","")
+    .replace("❌","")
+    .replace("🚨","")
+    .replace("📡","");
+
   speakText(
 
     `${train.hindi}
-     ${liveStatus}`
+     ${cleanVoice}`
 
   );
-}
-
 // CONFIRM DIRECTION
 
 function confirmDirection(place){
