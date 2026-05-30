@@ -67,6 +67,7 @@ async function fetchRailData(query){
       "Rail API:",
       data
     );
+    alert(JSON.stringify(data));
 
     if(!data){
 
