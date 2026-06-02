@@ -154,11 +154,16 @@ const nextStation =
 
   // FINAL CARD
 
-  box.innerHTML = `
+box.innerHTML = `
 
 <div class="train-card">
 
-  <div class="card-top">
+  <div
+    class="card-top"
+    style="
+      position:relative;
+    "
+  >
 
     <button
       onclick="
@@ -182,127 +187,116 @@ const nextStation =
     </button>
 
     <div class="train-name">
-  🚆 ${train.hindi} (${train.number})
-</div>
-  </div>
-
-  <div class="card-body">
-
-    <div
-  style="
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-bottom:15px;
-    font-size:16px;
-    font-weight:600;
-  "
->
-  <span>🟢 लाइव स्थिति:</span>
-  <span>${liveStatus}</span>
-</div>
-</div>
+      🚆 ${train.hindi} (${train.number})
     </div>
 
-    <button
-      onclick="
-        window.open(
-          'https://www.railyatri.in/live-train-status/${train.number}',
-          '_blank'
-        )
-      "
-      style="
-        width:75%;
-        margin:0 auto 18px auto;
-        display:block;
-        border:none;
-        border-radius:14px;
-        padding:14px;
-        font-size:17px;
-        font-weight:bold;
-        color:white;
-        background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #0ea5e9
-        );
-        box-shadow:
-        0 4px 12px rgba(0,0,0,.18);
-        margin-bottom:18px;
-        cursor:pointer;
-      "
-    >
-      🚉 लाइव ट्रेन देखें
-    </button>
-
-    <div
-  style="
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:15px;
-  "
->
-
-  <div
-    style="
-      background:#eef4ff;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-    "
-  >
-    <div style="font-size:13px;color:#666;">
-      📍 वर्तमान
-    </div>
-
-    <div
-      style="
-        margin-top:5px;
-        font-weight:bold;
-        font-size:16px;
-      "
-    >
-      ${currentLocation || "—"}
-    </div>
   </div>
 
   <div
+    class="card-body"
     style="
-      background:#eef4ff;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
+      background:#f8fafc;
     "
   >
-    <div style="font-size:13px;color:#666;">
-      🚉 अगला
-    </div>
 
     <div
       style="
-        margin-top:5px;
-        font-weight:bold;
-        font-size:16px;
+        text-align:center;
+        margin-bottom:14px;
       "
     >
-      ${nextStation || "—"}
-    </div>
-  </div>
 
-</div>
-        <div
-          style="
-            font-size:18px;
-            font-weight:bold;
-          "
-        >
-          ${currentLocation || "जानकारी उपलब्ध नहीं"}
-        </div>
+      <div
+        style="
+          font-size:15px;
+          color:#64748b;
+          margin-bottom:6px;
+        "
+      >
+        🟢 लाइव स्थिति
       </div>
 
-      <div>
+      <div
+        style="
+          font-size:18px;
+          font-weight:bold;
+          color:#15803d;
+          margin-bottom:12px;
+        "
+      >
+        ${liveStatus}
+      </div>
+
+      <button
+        onclick="
+          window.open(
+            'https://www.railyatri.in/live-train-status/${train.number}',
+            '_blank'
+          )
+        "
+        style="
+          border:none;
+          border-radius:12px;
+          padding:12px 22px;
+          font-size:16px;
+          font-weight:bold;
+          color:white;
+          background:#f97316;
+          box-shadow:0 4px 10px rgba(0,0,0,.15);
+          cursor:pointer;
+        "
+      >
+        🚉 लाइव ट्रेन देखें
+      </button>
+
+    </div>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+        margin-bottom:12px;
+      "
+    >
+
+      <div
+        style="
+          background:#eef4ff;
+          border-radius:10px;
+          padding:10px;
+          text-align:center;
+        "
+      >
+        <div
+          style="
+            font-size:13px;
+            color:#666;
+          "
+        >
+          📍 वर्तमान
+        </div>
+
+        <div
+          style="
+            margin-top:4px;
+            font-weight:bold;
+            font-size:15px;
+          "
+        >
+          ${currentLocation || "उपलब्ध नहीं"}
+        </div>
+
+      </div>
+
+      <div
+        style="
+          background:#eef4ff;
+          border-radius:10px;
+          padding:10px;
+          text-align:center;
+        "
+      >
         <div
           style="
             font-size:13px;
@@ -314,17 +308,37 @@ const nextStation =
 
         <div
           style="
-            font-size:18px;
+            margin-top:4px;
             font-weight:bold;
+            font-size:15px;
           "
         >
-          ${nextStation || "जानकारी उपलब्ध नहीं"}
+          ${nextStation || "उपलब्ध नहीं"}
         </div>
+
       </div>
 
     </div>
 
-    <div class="time-grid">
+    <div
+      style="
+        text-align:center;
+        font-size:14px;
+        color:#475569;
+        font-weight:600;
+        margin-bottom:10px;
+      "
+    >
+      📍 ${station.name}
+    </div>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      "
+    >
 
       <div class="time-box">
 
@@ -338,7 +352,7 @@ const nextStation =
 
         <div
           style="
-            margin-top:6px;
+            margin-top:4px;
             color:#d97706;
             font-weight:bold;
           "
@@ -360,7 +374,7 @@ const nextStation =
 
         <div
           style="
-            margin-top:6px;
+            margin-top:4px;
             color:#d97706;
             font-weight:bold;
           "
@@ -371,13 +385,12 @@ const nextStation =
       </div>
 
     </div>
-    
+
   </div>
 
 </div>
 
 `;
-
   // VOICE
 
     const cleanVoice =
