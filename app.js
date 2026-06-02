@@ -182,48 +182,26 @@ const nextStation =
     </button>
 
     <div class="train-name">
-      🚆 ${train.hindi}
-    </div>
-
-    <div
-      style="
-        font-size:14px;
-        opacity:.8;
-        margin-top:4px;
-      "
-    >
-      (${train.number})
-    </div>
-
+  🚆 ${train.hindi} (${train.number})
+</div>
   </div>
 
   <div class="card-body">
 
     <div
-      style="
-        text-align:center;
-        margin-bottom:18px;
-      "
-    >
-      <div
-        style="
-          font-size:14px;
-          color:#666;
-          margin-bottom:8px;
-        "
-      >
-        🟢 लाइव स्थिति
-      </div>
-
-      <div
-        style="
-          font-size:18px;
-          font-weight:bold;
-          color:#0f766e;
-        "
-      >
-        ${liveStatus}
-      </div>
+  style="
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:15px;
+    font-size:16px;
+    font-weight:600;
+  "
+>
+  <span>🟢 लाइव स्थिति:</span>
+  <span>${liveStatus}</span>
+</div>
+</div>
     </div>
 
     <button
@@ -234,7 +212,9 @@ const nextStation =
         )
       "
       style="
-        width:100%;
+        width:75%;
+        margin:0 auto 18px auto;
+        display:block;
         border:none;
         border-radius:14px;
         padding:14px;
@@ -256,22 +236,62 @@ const nextStation =
       🚉 लाइव ट्रेन देखें
     </button>
 
-    <div class="journey-box">
+    <div
+  style="
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:15px;
+  "
+>
 
-      <div
-        style="
-          margin-bottom:14px;
-        "
-      >
-        <div
-          style="
-            font-size:13px;
-            color:#666;
-          "
-        >
-          📍 वर्तमान स्थिति
-        </div>
+  <div
+    style="
+      background:#eef4ff;
+      border-radius:12px;
+      padding:12px;
+      text-align:center;
+    "
+  >
+    <div style="font-size:13px;color:#666;">
+      📍 वर्तमान
+    </div>
 
+    <div
+      style="
+        margin-top:5px;
+        font-weight:bold;
+        font-size:16px;
+      "
+    >
+      ${currentLocation || "—"}
+    </div>
+  </div>
+
+  <div
+    style="
+      background:#eef4ff;
+      border-radius:12px;
+      padding:12px;
+      text-align:center;
+    "
+  >
+    <div style="font-size:13px;color:#666;">
+      🚉 अगला
+    </div>
+
+    <div
+      style="
+        margin-top:5px;
+        font-weight:bold;
+        font-size:16px;
+      "
+    >
+      ${nextStation || "—"}
+    </div>
+  </div>
+
+</div>
         <div
           style="
             font-size:18px;
@@ -351,18 +371,7 @@ const nextStation =
       </div>
 
     </div>
-
-    <div
-      style="
-        margin-top:18px;
-        text-align:center;
-        font-size:14px;
-        color:#666;
-      "
-    >
-      🎤 ${spokenText}
-    </div>
-
+    
   </div>
 
 </div>
