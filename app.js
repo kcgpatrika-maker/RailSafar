@@ -167,6 +167,24 @@ box.innerHTML = `
 
     <button
       onclick="
+        document.getElementById('output-box').innerHTML='';
+      "
+      style="
+        position:absolute;
+        top:10px;
+        right:12px;
+        border:none;
+        background:none;
+        color:white;
+        font-size:22px;
+        cursor:pointer;
+      "
+    >
+      ✖
+    </button>
+
+    <button
+      onclick="
         navigator.share({
           title:'RailSafar',
           text:'${train.hindi} ${liveStatus}',
@@ -175,10 +193,11 @@ box.innerHTML = `
       "
       style="
         position:absolute;
-        top:12px;
-        right:12px;
+        top:10px;
+        right:48px;
         border:none;
         background:none;
+        color:white;
         font-size:20px;
         cursor:pointer;
       "
@@ -199,33 +218,58 @@ box.innerHTML = `
     "
   >
 
+    <!-- LIVE STATUS -->
+
     <div
       style="
-        text-align:center;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-size:17px;
+        font-weight:bold;
+        margin-bottom:12px;
+      "
+    >
+      <span>🟢 लाइव स्थिति:</span>
+      <span>${liveStatus}</span>
+    </div>
+
+    <!-- LIVE LOCATION -->
+
+    <div
+      style="
+        background:#eef4ff;
+        border-radius:12px;
+        padding:12px;
         margin-bottom:14px;
+        line-height:1.8;
       "
     >
 
-      <div
-        style="
-          font-size:15px;
-          color:#64748b;
-          margin-bottom:6px;
-        "
-      >
-        🟢 लाइव स्थिति
+      <div>
+        📍 वर्तमान:
+        <b>
+          ${currentLocation || "उपलब्ध नहीं"}
+        </b>
       </div>
 
-      <div
-        style="
-          font-size:18px;
-          font-weight:bold;
-          color:#15803d;
-          margin-bottom:12px;
-        "
-      >
-        ${liveStatus}
+      <div>
+        🚉 अगला स्टेशन:
+        <b>
+          ${nextStation || "उपलब्ध नहीं"}
+        </b>
       </div>
+
+    </div>
+
+    <!-- LIVE BUTTON -->
+
+    <div
+      style="
+        text-align:center;
+        margin-bottom:16px;
+      "
+    >
 
       <button
         onclick="
@@ -237,7 +281,7 @@ box.innerHTML = `
         style="
           border:none;
           border-radius:12px;
-          padding:12px 22px;
+          padding:12px 24px;
           font-size:16px;
           font-weight:bold;
           color:white;
@@ -251,136 +295,69 @@ box.innerHTML = `
 
     </div>
 
-    <div
-      style="
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-        margin-bottom:12px;
-      "
-    >
-
-      <div
-        style="
-          background:#eef4ff;
-          border-radius:10px;
-          padding:10px;
-          text-align:center;
-        "
-      >
-        <div
-          style="
-            font-size:13px;
-            color:#666;
-          "
-        >
-          📍 वर्तमान
-        </div>
-
-        <div
-          style="
-            margin-top:4px;
-            font-weight:bold;
-            font-size:15px;
-          "
-        >
-          ${currentLocation || "उपलब्ध नहीं"}
-        </div>
-
-      </div>
-
-      <div
-        style="
-          background:#eef4ff;
-          border-radius:10px;
-          padding:10px;
-          text-align:center;
-        "
-      >
-        <div
-          style="
-            font-size:13px;
-            color:#666;
-          "
-        >
-          🚉 अगला स्टेशन
-        </div>
-
-        <div
-          style="
-            margin-top:4px;
-            font-weight:bold;
-            font-size:15px;
-          "
-        >
-          ${nextStation || "उपलब्ध नहीं"}
-        </div>
-
-      </div>
-
-    </div>
+    <!-- STATION INFO -->
 
     <div
       style="
         text-align:center;
-        font-size:14px;
-        color:#475569;
-        font-weight:600;
-        margin-bottom:10px;
+        font-size:18px;
+        font-weight:bold;
+        color:#1e3a8a;
+        margin-bottom:14px;
       "
     >
       📍 ${station.name}
     </div>
 
+    <!-- ARRIVAL / DEPARTURE -->
+
     <div
       style="
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
+        background:white;
+        border-radius:12px;
+        padding:14px;
+        line-height:2;
+        box-shadow:0 1px 4px rgba(0,0,0,.08);
       "
     >
 
-      <div class="time-box">
+      <div>
 
-        <div class="time-title">
-          🟢 आगमन
-        </div>
+        🟢 आगमन:
 
-        <div class="time-value">
+        <b>
           ${arrivalTime}
-        </div>
+        </b>
 
-        <div
+        <span
           style="
-            margin-top:4px;
-            color:#d97706;
+            color:#dc2626;
             font-weight:bold;
+            margin-left:8px;
           "
         >
           ${expectedArrival}
-        </div>
+        </span>
 
       </div>
 
-      <div class="time-box">
+      <div>
 
-        <div class="time-title">
-          🔴 प्रस्थान
-        </div>
+        🔴 प्रस्थान:
 
-        <div class="time-value">
+        <b>
           ${departureTime}
-        </div>
+        </b>
 
-        <div
+        <span
           style="
-            margin-top:4px;
-            color:#d97706;
+            color:#dc2626;
             font-weight:bold;
+            margin-left:8px;
           "
         >
           ${expectedDeparture}
-        </div>
+        </span>
 
       </div>
 
@@ -389,7 +366,6 @@ box.innerHTML = `
   </div>
 
 </div>
-
 `;
   // VOICE
 
