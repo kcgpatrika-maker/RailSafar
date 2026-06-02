@@ -98,6 +98,13 @@ async function confirmTrainQuery(
     result.liveStatus ||
 
     "📡 लाइव स्थिति उपलब्ध नहीं है";
+  const currentLocation =
+  result.currentLocation ||
+  "उपलब्ध नहीं";
+
+const nextStation =
+  result.nextStation ||
+  "उपलब्ध नहीं";
 
   // DELAY
 
@@ -236,6 +243,50 @@ async function confirmTrainQuery(
           </div>
 
         </div>
+
+        <div
+  style="
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:12px;
+    margin-top:15px;
+    margin-bottom:15px;
+  "
+>
+
+  <div
+    style="
+      font-size:15px;
+      font-weight:bold;
+      margin-bottom:10px;
+    "
+  >
+    🚉 लाइव ट्रैकिंग
+  </div>
+
+  <div
+    style="
+      margin-bottom:8px;
+      color:#2563eb;
+      font-weight:600;
+    "
+  >
+    📍 वर्तमान स्थिति:
+    ${currentLocation}
+  </div>
+
+  <div
+    style="
+      color:#059669;
+      font-weight:600;
+    "
+  >
+    ➡️ अगला स्टेशन:
+    ${nextStation}
+  </div>
+
+</div>
 
         <div class="journey-box">
 
