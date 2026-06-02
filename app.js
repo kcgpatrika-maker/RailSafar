@@ -156,194 +156,218 @@ const nextStation =
 
   box.innerHTML = `
 
-    <div class="train-card">
+<div class="train-card">
 
-      <div class="card-top">
+  <div class="card-top">
 
-        <div class="train-name">
+    <button
+      onclick="
+        navigator.share({
+          title:'RailSafar',
+          text:'${train.hindi} ${liveStatus}',
+          url:window.location.href
+        })
+      "
+      style="
+        position:absolute;
+        top:12px;
+        right:12px;
+        border:none;
+        background:none;
+        font-size:20px;
+        cursor:pointer;
+      "
+    >
+      📤
+    </button>
 
-          🚆 ${train.hindi}
+    <div class="train-name">
+      🚆 ${train.hindi}
+    </div>
 
-          (${train.number})
+    <div
+      style="
+        font-size:14px;
+        opacity:.8;
+        margin-top:4px;
+      "
+    >
+      (${train.number})
+    </div>
 
+  </div>
+
+  <div class="card-body">
+
+    <div
+      style="
+        text-align:center;
+        margin-bottom:18px;
+      "
+    >
+      <div
+        style="
+          font-size:14px;
+          color:#666;
+          margin-bottom:8px;
+        "
+      >
+        🟢 लाइव स्थिति
+      </div>
+
+      <div
+        style="
+          font-size:18px;
+          font-weight:bold;
+          color:#0f766e;
+        "
+      >
+        ${liveStatus}
+      </div>
+    </div>
+
+    <button
+      onclick="
+        window.open(
+          'https://www.railyatri.in/live-train-status/${train.number}',
+          '_blank'
+        )
+      "
+      style="
+        width:100%;
+        border:none;
+        border-radius:14px;
+        padding:14px;
+        font-size:17px;
+        font-weight:bold;
+        color:white;
+        background:
+        linear-gradient(
+          135deg,
+          #2563eb,
+          #0ea5e9
+        );
+        box-shadow:
+        0 4px 12px rgba(0,0,0,.18);
+        margin-bottom:18px;
+        cursor:pointer;
+      "
+    >
+      🚉 लाइव ट्रेन देखें
+    </button>
+
+    <div class="journey-box">
+
+      <div
+        style="
+          margin-bottom:14px;
+        "
+      >
+        <div
+          style="
+            font-size:13px;
+            color:#666;
+          "
+        >
+          📍 वर्तमान स्थिति
         </div>
 
-        <div class="station-name">
+        <div
+          style="
+            font-size:18px;
+            font-weight:bold;
+          "
+        >
+          ${currentLocation || "जानकारी उपलब्ध नहीं"}
+        </div>
+      </div>
 
-          📍 ${station.name || "स्टेशन"}
-
+      <div>
+        <div
+          style="
+            font-size:13px;
+            color:#666;
+          "
+        >
+          🚉 अगला स्टेशन
         </div>
 
-        <div class="status-strip">
+        <div
+          style="
+            font-size:18px;
+            font-weight:bold;
+          "
+        >
+          ${nextStation || "जानकारी उपलब्ध नहीं"}
+        </div>
+      </div>
 
-          ${liveStatus}
+    </div>
 
+    <div class="time-grid">
+
+      <div class="time-box">
+
+        <div class="time-title">
+          🟢 आगमन
+        </div>
+
+        <div class="time-value">
+          ${arrivalTime}
+        </div>
+
+        <div
+          style="
+            margin-top:6px;
+            color:#d97706;
+            font-weight:bold;
+          "
+        >
+          ${expectedArrival}
         </div>
 
       </div>
 
-      <div class="card-body">
+      <div class="time-box">
 
-        <div class="time-grid">
+        <div class="time-title">
+          🔴 प्रस्थान
+        </div>
 
-          <div class="time-box">
-
-            <div class="time-title">
-
-              🟢 आगमन
-
-            </div>
-
-            <div class="time-value">
-
-              ${arrivalTime}
-
-            </div>
-
-            <div style="
-              margin-top:8px;
-              font-size:14px;
-              color:#d97706;
-              font-weight:bold;
-            ">
-
-              अनुमानित:
-              ${expectedArrival}
-
-            </div>
-
-          </div>
-
-          <div class="time-box">
-
-            <div class="time-title">
-
-              🔴 प्रस्थान
-
-            </div>
-
-            <div class="time-value">
-
-              ${departureTime}
-
-            </div>
-
-            <div style="
-              margin-top:8px;
-              font-size:14px;
-              color:#d97706;
-              font-weight:bold;
-            ">
-
-              अनुमानित:
-              ${expectedDeparture}
-
-            </div>
-
-          </div>
-
+        <div class="time-value">
+          ${departureTime}
         </div>
 
         <div
-  style="
-    background:#f8fafc;
-    border:1px solid #e5e7eb;
-    border-radius:12px;
-    padding:12px;
-    margin-top:15px;
-    margin-bottom:15px;
-  "
->
-
-  <div
-    style="
-      font-size:15px;
-      font-weight:bold;
-      margin-bottom:10px;
-    "
-  >
-    🚉 लाइव ट्रैकिंग
-  </div>
-
-  <div
-    style="
-      margin-bottom:8px;
-      color:#2563eb;
-      font-weight:600;
-    "
-  >
-    📍 वर्तमान स्थिति:
-    ${currentLocation}
-  </div>
-
-  <div
-    style="
-      color:#059669;
-      font-weight:600;
-    "
-  >
-    ➡️ अगला स्टेशन:
-    ${nextStation}
-  </div>
-
-</div>
-
-        <div class="journey-box">
-
-          🎤 आपने पूछा:
-
-          <strong>
-
-            ${spokenText}
-
-          </strong>
-
-          <div class="journey-line">
-
-            लाइव रेलवे स्थिति प्राप्त
-
-          </div>
-
-        </div>
-
-        <div class="card-actions">
-
-          <button
-            class="action-btn"
-            onclick="
-              window.open(
-                'https://www.railyatri.in/live-train-status/${train.number}',
-                '_blank'
-              )
-            "
-          >
-
-            🚉 लाइव स्रोत
-
-          </button>
-
-          <button
-            class="action-btn"
-            onclick="
-              navigator.share({
-                title:'RailSafar',
-                text:'${train.hindi} ${liveStatus}',
-                url:window.location.href
-              })
-            "
-          >
-
-            📤 शेयर
-
-          </button>
-
+          style="
+            margin-top:6px;
+            color:#d97706;
+            font-weight:bold;
+          "
+        >
+          ${expectedDeparture}
         </div>
 
       </div>
 
     </div>
 
-  `;
+    <div
+      style="
+        margin-top:18px;
+        text-align:center;
+        font-size:14px;
+        color:#666;
+      "
+    >
+      🎤 ${spokenText}
+    </div>
+
+  </div>
+
+</div>
+
+`;
 
   // VOICE
 
