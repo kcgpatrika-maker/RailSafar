@@ -105,7 +105,14 @@ async function confirmTrainQuery(
 const nextStation =
   result.nextStation ||
   "उपलब्ध नहीं";
+const platformNumber =
+  result.platformNumber || "";
 
+const statusAsOf =
+  result.statusAsOf || "";
+
+const distanceInfo =
+  result.distanceInfo || "";
   // DELAY
 
   const delayMinutes =
@@ -219,95 +226,125 @@ box.innerHTML = `
   >
 
     <!-- LIVE STATUS -->
+    <div
+  style="
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+    font-weight:600;
+    flex-wrap:wrap;
+  "
+>
+  <span>🟢 लाइव स्थिति:</span>
+  <span>${liveStatus}</span>
+</div>
+
+<div
+  style="
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:14px;
+  "
+>
+
+  <div
+    style="
+      background:white;
+      border-radius:10px;
+      padding:10px;
+      text-align:center;
+    "
+  >
+    <div style="font-size:12px;color:#666;">
+      📍 वर्तमान स्थिति
+    </div>
 
     <div
       style="
-        display:flex;
-        align-items:center;
-        gap:8px;
-        font-size:17px;
         font-weight:bold;
-        margin-bottom:12px;
+        margin-top:4px;
       "
     >
-      <span>🟢 लाइव स्थिति:</span>
-      <span>${liveStatus}</span>
+      ${currentLocation}
     </div>
 
-    <!-- LIVE LOCATION -->
+    ${platformNumber
+      ? `<div style="font-size:12px;color:#666;">प्लेटफॉर्म ${platformNumber}</div>`
+      : ""
+    }
+
+  </div>
+
+  <div
+    style="
+      background:white;
+      border-radius:10px;
+      padding:10px;
+      text-align:center;
+    "
+  >
+    <div style="font-size:12px;color:#666;">
+      🚉 अगला स्टेशन
+    </div>
 
     <div
       style="
-        background:#eef4ff;
-        border-radius:12px;
-        padding:12px;
-        margin-bottom:14px;
-        line-height:1.8;
-      "
-    >
-
-      <div>
-        📍 वर्तमान:
-        <b>
-          ${currentLocation || "उपलब्ध नहीं"}
-        </b>
-      </div>
-
-      <div>
-        🚉 अगला स्टेशन:
-        <b>
-          ${nextStation || "उपलब्ध नहीं"}
-        </b>
-      </div>
-
-    </div>
-
-    <!-- LIVE BUTTON -->
-
-    <div
-      style="
-        text-align:center;
-        margin-bottom:16px;
-      "
-    >
-
-      <button
-        onclick="
-          window.open(
-            'https://www.railyatri.in/live-train-status/${train.number}',
-            '_blank'
-          )
-        "
-        style="
-          border:none;
-          border-radius:12px;
-          padding:12px 24px;
-          font-size:16px;
-          font-weight:bold;
-          color:white;
-          background:#f97316;
-          box-shadow:0 4px 10px rgba(0,0,0,.15);
-          cursor:pointer;
-        "
-      >
-        🚉 लाइव ट्रेन देखें
-      </button>
-
-    </div>
-
-    <!-- STATION INFO -->
-
-    <div
-      style="
-        text-align:center;
-        font-size:18px;
         font-weight:bold;
-        color:#1e3a8a;
-        margin-bottom:14px;
+        margin-top:4px;
       "
     >
-      📍 ${station.name}
+      ${nextStation}
     </div>
+
+    ${distanceInfo
+      ? `<div style="font-size:12px;color:#666;">${distanceInfo}</div>`
+      : ""
+    }
+
+  </div>
+
+</div>
+
+<button
+  onclick="
+    window.open(
+      'https://www.railyatri.in/live-train-status/${train.number}',
+      '_blank'
+    )
+  "
+  style="
+    display:block;
+    margin:0 auto 14px auto;
+    width:70%;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-weight:bold;
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    cursor:pointer;
+  "
+>
+  🚉 लाइव ट्रेन देखें
+</button>
+
+${statusAsOf
+  ? `
+<div
+  style="
+    text-align:center;
+    font-size:12px;
+    color:#666;
+    margin-bottom:12px;
+  "
+>
+  अपडेट: ${statusAsOf}
+</div>
+`
+  : ""
+}
 
     <!-- ARRIVAL / DEPARTURE -->
 
