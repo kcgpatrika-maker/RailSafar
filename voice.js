@@ -194,7 +194,6 @@ fetchRailData(spokenText)
 
   }
 );
-}
 
       }, 100);
 
