@@ -75,6 +75,22 @@ function askTrainName(){
         event.results[0][0]
         .transcript
         .trim();
+      let prefetchedResult = null;
+
+fetchRailData(spokenText)
+  .then(data => {
+
+    prefetchedResult = data;
+
+  })
+  .catch(err => {
+
+    console.log(
+      "Prefetch Error:",
+      err
+    );
+
+  });
 
       const box =
 
@@ -158,16 +174,27 @@ function askTrainName(){
         if(confirmBtn){
 
           confirmBtn.addEventListener(
-            "click",
-            () => {
+  "click",
+  () => {
 
-              confirmTrainQuery(
-                spokenText
-              );
+    if(prefetchedResult){
 
-            }
-          );
-        }
+      confirmTrainQuery(
+        spokenText,
+        prefetchedResult
+      );
+
+    }else{
+
+      confirmTrainQuery(
+        spokenText
+      );
+
+    }
+
+  }
+);
+}
 
       }, 100);
 
