@@ -75,22 +75,6 @@ function askTrainName(){
         event.results[0][0]
         .transcript
         .trim();
-      let prefetchedResult = null;
-
-fetchRailData(spokenText)
-  .then(data => {
-
-    prefetchedResult = data;
-
-  })
-  .catch(err => {
-
-    console.log(
-      "Prefetch Error:",
-      err
-    );
-
-  });
 
       const box =
 
@@ -165,38 +149,28 @@ fetchRailData(spokenText)
 
       setTimeout(() => {
 
-  const confirmBtn =
-    document.getElementById(
-      "confirm-train-btn"
-    );
+        const confirmBtn =
 
-  if(confirmBtn){
-
-    confirmBtn.addEventListener(
-      "click",
-      () => {
-
-        if(prefetchedResult){
-
-          confirmTrainQuery(
-            spokenText,
-            prefetchedResult
+          document.getElementById(
+            "confirm-train-btn"
           );
 
-        }else{
+        if(confirmBtn){
 
-          confirmTrainQuery(
-            spokenText
+          confirmBtn.addEventListener(
+            "click",
+            () => {
+
+              confirmTrainQuery(
+                spokenText
+              );
+
+            }
           );
-
         }
 
-      }
-    );
+      }, 100);
 
-  }
-
-}, 100);
     };
 
     recognition.onerror = function(){
