@@ -1,8 +1,9 @@
 // CONFIRM TRAIN QUERY
 
 async function confirmTrainQuery(
-  spokenText
-){
+  spokenText,
+  prefetchedResult = null
+)
 
   const box =
 
@@ -34,10 +35,10 @@ async function confirmTrainQuery(
   // FETCH DATA
 
   const result =
-
-    await fetchRailData(
-      spokenText
-    );
+  prefetchedResult ||
+  await fetchRailData(
+    spokenText
+  );
 
   // API ERROR
 
