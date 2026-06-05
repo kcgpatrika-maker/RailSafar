@@ -165,38 +165,38 @@ fetchRailData(spokenText)
 
       setTimeout(() => {
 
-        const confirmBtn =
+  const confirmBtn =
+    document.getElementById(
+      "confirm-train-btn"
+    );
 
-          document.getElementById(
-            "confirm-train-btn"
+  if(confirmBtn){
+
+    confirmBtn.addEventListener(
+      "click",
+      () => {
+
+        if(prefetchedResult){
+
+          confirmTrainQuery(
+            spokenText,
+            prefetchedResult
           );
 
-        if(confirmBtn){
+        }else{
 
-          confirmBtn.addEventListener(
-  "click",
-  () => {
+          confirmTrainQuery(
+            spokenText
+          );
 
-    if(prefetchedResult){
+        }
 
-      confirmTrainQuery(
-        spokenText,
-        prefetchedResult
-      );
-
-    }else{
-
-      confirmTrainQuery(
-        spokenText
-      );
-
-    }
+      }
+    );
 
   }
-);
 
-      }, 100);
-
+}, 100);
     };
 
     recognition.onerror = function(){
