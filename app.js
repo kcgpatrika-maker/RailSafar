@@ -123,42 +123,21 @@ const distanceInfo =
 
   const arrivalTime =
 
-    station.arrival ||
-    "--";
+  result.eta ||
+  station.arrival ||
+  "--";
 
-  const departureTime =
+const departureTime =
 
-    station.departure ||
-    "--";
-
+  result.etd ||
+  station.departure ||
+  "--";
+  
   // EXPECTED TIMES
 
-  let expectedArrival =
-    "--";
-
-  let expectedDeparture =
-    "--";
-
-  if(arrivalTime !== "--"){
-
-    expectedArrival =
-
-      addDelayToTime(
-        arrivalTime,
-        delayMinutes
-      );
-  }
-
-  if(departureTime !== "--"){
-
-    expectedDeparture =
-
-      addDelayToTime(
-        departureTime,
-        delayMinutes
-      );
-  }
-
+let expectedArrival = "";
+let expectedDeparture = "";
+  
   // FINAL CARD
 
 box.innerHTML = `
