@@ -177,28 +177,6 @@ box.innerHTML = `
       ✖
     </button>
 
-    <button
-      onclick="
-        navigator.share({
-          title:'RailSafar',
-          text:'${train.hindi} ${liveStatus}',
-          url:window.location.href
-        })
-      "
-      style="
-        position:absolute;
-        top:10px;
-        right:48px;
-        border:none;
-        background:none;
-        color:white;
-        font-size:20px;
-        cursor:pointer;
-      "
-    >
-      📤
-    </button>
-
     <div class="train-name">
       🚆 ${train.hindi} (${train.number})
     </div>
@@ -314,24 +292,8 @@ box.innerHTML = `
     cursor:pointer;
   "
 >
-  🚉 लाइव ट्रेन देखें
+  लाइव ट्रेन देखें
 </button>
-
-${statusAsOf
-  ? `
-<div
-  style="
-    text-align:center;
-    font-size:12px;
-    color:#666;
-    margin-bottom:12px;
-  "
->
-  अपडेट: ${statusAsOf}
-</div>
-`
-  : ""
-}
 
     <!-- ARRIVAL / DEPARTURE -->
 
@@ -345,35 +307,47 @@ ${statusAsOf
   "
 >
 
-  <div
-    style="
-      font-weight:bold;
-      color:#2563eb;
-      margin-bottom:8px;
-      border-bottom:1px solid #e5e7eb;
-      padding-bottom:6px;
-    "
-  >
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:bold;
+    color:#2563eb;
+    margin-bottom:8px;
+    border-bottom:1px solid #e5e7eb;
+    padding-bottom:6px;
+  "
+>
+  <span>
     📌 ${stationName}
-  </div>
+  </span>
+
+  ${
+    stationPlatform
+      ? `<span>
+           🚉 PF-${stationPlatform}
+         </span>`
+      : ""
+  }
+</div>
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:6px;
+    font-weight:600;
+  "
+>
 
   <div>
 
     🟢 आगमन:
 
-    <b>
-      ${arrivalTime}
-    </b>
+    <b>${arrivalTime}</b>
 
-    <span
-      style="
-        color:#dc2626;
-        font-weight:bold;
-        margin-left:8px;
-      "
-    >
-      ${expectedArrival}
-    </span>
+    ${expectedArrival}
 
   </div>
 
@@ -381,40 +355,56 @@ ${statusAsOf
 
     🔴 प्रस्थान:
 
-    <b>
-      ${departureTime}
-    </b>
+    <b>${departureTime}</b>
 
-    <span
-      style="
-        color:#dc2626;
-        font-weight:bold;
-        margin-left:8px;
-      "
-    >
-      ${expectedDeparture}
-    </span>
+    ${expectedDeparture}
 
   </div>
 
-  ${stationPlatform
-    ? `
-  <div>
+</div>
 
-    🚉 प्लेटफॉर्म:
+${statusAsOf
+? `
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:12px;
+    font-size:12px;
+    color:#666;
+  "
+>
 
-    <b>
-      ${stationPlatform}
-    </b>
+  <span>
+    🕒 ${statusAsOf}
+  </span>
 
-  </div>
-  `
-    : ""
-  }
+  <button
+    onclick="
+      navigator.share({
+        title:'RailSafar',
+        text:'${train.hindi} ${liveStatus}',
+        url:window.location.href
+      })
+    "
+    style="
+      border:none;
+      background:none;
+      font-size:18px;
+      cursor:pointer;
+    "
+  >
+    📤
+  </button>
+
+</div>
+`
+: ""
+}
 
 </div>
 </div>
-
 </div>
 `;
   // VOICE
