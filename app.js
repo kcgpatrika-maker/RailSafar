@@ -108,6 +108,14 @@ const nextStation =
 const platformNumber =
   result.platformNumber || "";
 
+const stationPlatform =
+  result.stationPlatform || "";
+
+const stationName =
+  station.name ||
+  result.station?.name ||
+  "पूछा गया स्टेशन";  
+
 const statusAsOf =
   result.statusAsOf || "";
 
@@ -327,59 +335,85 @@ ${statusAsOf
 
     <!-- ARRIVAL / DEPARTURE -->
 
-    <div
+<div
+  style="
+    background:white;
+    border-radius:12px;
+    padding:14px;
+    line-height:2;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+  "
+>
+
+  <div
+    style="
+      font-weight:bold;
+      color:#2563eb;
+      margin-bottom:8px;
+      border-bottom:1px solid #e5e7eb;
+      padding-bottom:6px;
+    "
+  >
+    📌 ${stationName}
+  </div>
+
+  <div>
+
+    🟢 आगमन:
+
+    <b>
+      ${arrivalTime}
+    </b>
+
+    <span
       style="
-        background:white;
-        border-radius:12px;
-        padding:14px;
-        line-height:2;
-        box-shadow:0 1px 4px rgba(0,0,0,.08);
+        color:#dc2626;
+        font-weight:bold;
+        margin-left:8px;
       "
     >
-
-      <div>
-
-        🟢 आगमन:
-
-        <b>
-          ${arrivalTime}
-        </b>
-
-        <span
-          style="
-            color:#dc2626;
-            font-weight:bold;
-            margin-left:8px;
-          "
-        >
-          ${expectedArrival}
-        </span>
-
-      </div>
-
-      <div>
-
-        🔴 प्रस्थान:
-
-        <b>
-          ${departureTime}
-        </b>
-
-        <span
-          style="
-            color:#dc2626;
-            font-weight:bold;
-            margin-left:8px;
-          "
-        >
-          ${expectedDeparture}
-        </span>
-
-      </div>
-
-    </div>
+      ${expectedArrival}
+    </span>
 
   </div>
+
+  <div>
+
+    🔴 प्रस्थान:
+
+    <b>
+      ${departureTime}
+    </b>
+
+    <span
+      style="
+        color:#dc2626;
+        font-weight:bold;
+        margin-left:8px;
+      "
+    >
+      ${expectedDeparture}
+    </span>
+
+  </div>
+
+  ${stationPlatform
+    ? `
+  <div>
+
+    🚉 प्लेटफॉर्म:
+
+    <b>
+      ${stationPlatform}
+    </b>
+
+  </div>
+  `
+    : ""
+  }
+
+</div>
+</div>
 
 </div>
 `;
