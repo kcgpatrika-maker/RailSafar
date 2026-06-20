@@ -26,9 +26,11 @@ function speakText(text){
 
 // Hindi → English transliteration helper
 function translateToEnglish(text){
-  // Sanscript या indic-transliteration library का इस्तेमाल करें
-  // Example: Sanscript library
-  return Sanscript.t(text, "devanagari", "itrans");
+  // अगर Sanscript लोड नहीं है तो fallback
+  if(typeof Sanscript !== "undefined"){
+    return Sanscript.t(text, "devanagari", "itrans");
+  }
+  return text; // fallback: वही text दिखेगा
 }
 
 // TRAIN BUTTON
