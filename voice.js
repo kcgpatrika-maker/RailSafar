@@ -44,6 +44,25 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
+function normalizeTrainLine(text){
+  let line = text.trim();
+
+  // Express suffix
+  if(!line.toLowerCase().includes("express")){
+    line = line + " Express";
+  }
+
+  // Simple Hindi→English replacements (expandable)
+  const map = {
+    "प्रयागराज एक्सप्रेस":"Prayagraj Express",
+    "मरुधर एक्सप्रेस":"Marudhar Express",
+    "पूजा एक्सप्रेस":"Pooja Express",
+    "गोमती एक्सप्रेस":"Gomti Express"
+  };
+
+  return map[line] || line;
+}
+
 // TRAIN BUTTON
 
 function askTrainName(){
@@ -81,6 +100,15 @@ function askTrainName(){
         document.getElementById(
           "output-box"
         );
+      
+      // Confirm button event listener
+      const confirmBtn = document.getElementById("confirm-train-btn");
+      if(confirmBtn){
+      confirmBtn.addEventListener("click", () => {
+      const englishLine = normalizeTrainLine(spokenText);
+      confirmTrainQuery(englishLine); // backend को English लाइन भेजें
+      });
+      }
 
       // VERIFY CARD
 
@@ -112,6 +140,15 @@ function askTrainName(){
 
               ${spokenText}
 
+            </div>
+            <!-- अंग्रेज़ी translation -->
+            <div style="
+            margin-top:12px;
+            font-size:16px;
+            color:#2563eb;
+            text-align:center;
+          ">
+            Normalized: ${normalizeTrainLine(spokenText)}
             </div>
 
             <div
