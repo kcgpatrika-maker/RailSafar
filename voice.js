@@ -26,11 +26,22 @@ function speakText(text){
 
 // Hindi → English transliteration helper
 function translateToEnglish(text){
-  // अगर Sanscript लोड नहीं है तो fallback
-  if(typeof Sanscript !== "undefined"){
-    return Sanscript.t(text, "devanagari", "itrans");
+  const dictionary = {
+    "रानीखेत":"Ranikhet",
+    "एक्सप्रेस":"Express",
+    "स्टेशन":"Station",
+    "जयपुर":"Jaipur",
+    "काठगोदाम":"Kathgodam"
+    // आगे ज़रूरत पड़ने पर और जोड़ सकते हैं
+  };
+
+  let result = text;
+  for(const key in dictionary){
+    result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
-  return text; // fallback: वही text दिखेगा
+
+  // Natural English query बनाएं
+  return `kathgodam jane wali ${result} par kab aaegi`;
 }
 
 // TRAIN BUTTON
@@ -63,7 +74,7 @@ function askTrainName(){
 
             <!-- अंग्रेज़ी translation -->
             <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:center;">
-              Translation: ${translateToEnglish(spokenText)}
+              English Query: ${translateToEnglish(spokenText)}
             </div>
 
             <div class="card-actions" style="margin-top:20px;">
