@@ -28,16 +28,15 @@ function speakText(text){
 function translateToEnglish(text){
   try {
     if (typeof Sanscript !== "undefined") {
-      return Sanscript.t(text, "devanagari", "itrans");
+      // "iast" mode Roman letters देता है
+      return Sanscript.t(text, "devanagari", "iast");
     }
-    // अगर Sanscript नहीं है तो simple fallback
-    return text;
+    return text; // fallback
   } catch (err) {
     console.log("Transliteration error:", err.message);
     return text;
   }
 }
-
 
 // TRAIN BUTTON
 function askTrainName(){
