@@ -71,7 +71,7 @@ function askTrainName(){
       const box = document.getElementById("output-box");
 
       // VERIFY CARD
-box.innerHTML = `
+      box.innerHTML = `
   <div class="train-card">
     <div class="card-body">
       <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
@@ -95,6 +95,11 @@ box.innerHTML = `
     </div>
   </div>
 `;
+
+// ✅ हाँ बटन को action दें
+document.getElementById("confirm-train-btn").onclick = function(){
+  confirmTrainQuery(translateToEnglish(spokenText));
+};
 
     recognition.onerror = function(){
       hideMic();
