@@ -25,7 +25,7 @@ function speakText(text){
 }
 
 // Hindi → English transliteration helper
-function translateToEnglish(text){
+function extractQueryParts(text){
   const dictionary = {
     "जम्मू तवी":"Jammu Tawi",
     "मरुधर":"Marudhar",
@@ -45,21 +45,21 @@ function translateToEnglish(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
-  // 1. Destination (पहला 'जाने वाली' से पहले का हिस्सा)
+  // Destination (पहला 'जाने वाली' से पहले का हिस्सा)
   let destinationMatch = result.match(/^(.*?) जाने वाली/);
   let destination = destinationMatch ? destinationMatch[1].trim() : "";
 
-  // 2. Train name ('जाने वाली' और 'Station' के बीच)
+  // Train name ('जाने वाली' और 'Station' के बीच)
   let trainMatch = result.match(/जाने वाली (.*?) Station/);
   let train = trainMatch ? trainMatch[1].trim() : "";
 
-  // 3. Station (Station से पहले का शब्द)
+  // Departure station ('Station' से पहले का शब्द)
   let stationMatch = result.match(/(.*?) Station/);
   let station = stationMatch ? stationMatch[1].trim().split(" ").pop() : "";
 
-  // Final clean query
-  return `${destination} ${train} ${station} Station`.trim();
+  return { destination, train, station };
 }
+
 
 // TRAIN BUTTON
 function askTrainName(){
@@ -75,32 +75,34 @@ function askTrainName(){
       hideMic();
       const spokenText = event.results[0][0].transcript.trim();
       const box = document.getElementById("output-box");
-
+      
       // VERIFY CARD
-      box.innerHTML = `
-        <div class="train-card">
-          <div class="card-body">
-            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-              🎤 क्या आपने यही कहा?
-            </div>
+box.innerHTML = `
+  <div class="train-card">
+    <div class="card-body">
+      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+        🎤 क्या आपने यही कहा?
+      </div>
 
-            <!-- हिंदी लाइन -->
-            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-              ${spokenText}
-            </div>
+      <!-- हिंदी लाइन -->
+      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+        ${spokenText}
+      </div>
 
-            <!-- अंग्रेज़ी translation -->
-            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:center;">
-              English Query: ${translateToEnglish(spokenText)}
-            </div>
+      <!-- English categories -->
+      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+        <div><b>Destination:</b> ${destination}</div>
+        <div><b>Train Name:</b> ${train}</div>
+        <div><b>Departure Station:</b> ${station}</div>
+      </div>
 
-            <div class="card-actions" style="margin-top:20px;">
-              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-            </div>
-          </div>
-        </div>
-      `;
+      <div class="card-actions" style="margin-top:20px;text-align:center;">
+        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+      </div>
+    </div>
+  </div>
+`;
 
       // BUTTON EVENT
       setTimeout(() => {
