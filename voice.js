@@ -27,9 +27,8 @@ function speakText(text){
 // Hindi → English transliteration helper
 function translateToEnglish(text){
   const dictionary = {
-    "रानीखेत":"Ranikhet",
-    "पूजा":"Pooja",
     "जम्मू तवी":"Jammu Tawi",
+    "पूजा":"Pooja",
     "एक्सप्रेस":"Express",
     "स्टेशन":"Station",
     "जयपुर":"Jaipur",
@@ -43,9 +42,23 @@ function translateToEnglish(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
-  // Parser‑friendly English query बनाएं
-  return result;
+  // अब तीन हिस्से निकालें
+  // 1. गंतव्य (पहला 'जाने वाली' से पहले का हिस्सा)
+  let destinationMatch = result.match(/^(.*?) जाने वाली/);
+  let destination = destinationMatch ? destinationMatch[1].trim() : "";
+
+  // 2. ट्रेन नाम ('जाने वाली' और 'स्टेशन' के बीच)
+  let trainMatch = result.match(/जाने वाली (.*?) Station/);
+  let train = trainMatch ? trainMatch[1].trim() : "";
+
+  // 3. स्टेशन नाम ('Station' से पहले का शब्द)
+  let stationMatch = result.match(/(.*?) Station/);
+  let station = stationMatch ? stationMatch[1].trim() : "";
+
+  // Parser‑friendly query बनाएं
+  return `${destination} ${train} ${station} Station`.trim();
 }
+
 
 // TRAIN BUTTON
 function askTrainName(){
