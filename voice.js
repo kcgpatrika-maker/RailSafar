@@ -45,24 +45,24 @@ function extractQueryParts(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
+  // Destination = 'जाने वाली' से पहले का हिस्सा
   let destination = "";
+  let destMatch = result.match(/^(.*?) जाने वाली/);
+  if(destMatch) destination = destMatch[1].trim();
+
+  // Train Name = 'जाने वाली' के बाद के दो शब्द OR 'जाने वाली' और 'Station' के बीच
   let train = "";
+  let trainMatch = result.match(/जाने वाली (.*?) Station/);
+  if(trainMatch){
+    let words = trainMatch[1].trim().split(" ");
+    train = words.slice(0,2).join(" "); // सिर्फ़ दो शब्द लें
+  }
+
+  // Departure Station = 'Station' और उसके पहले का शब्द
   let station = "";
-
-  try {
-    let destMatch = result.match(/^(.*?) जाने वाली/);
-    if(destMatch) destination = destMatch[1].trim();
-
-    let trainMatch = result.match(/जाने वाली (.*?) Station/);
-    if(trainMatch) train = trainMatch[1].trim();
-
-    let stationMatch = result.match(/(.*?) Station/);
-    if(stationMatch) {
-      let words = stationMatch[1].trim().split(" ");
-      station = words[words.length-1];
-    }
-  } catch(e){
-    console.error("Parsing error:", e);
+  let stationMatch = result.match(/(\w+)\sStation/);
+  if(stationMatch){
+    station = stationMatch[1].trim();
   }
 
   return { destination, train, station };
@@ -87,7 +87,7 @@ function askTrainName(){
       const parts = extractQueryParts(spokenText);
 
       // VERIFY CARD
-box.innerHTML = `
+      box.innerHTML = `
   <div class="train-card">
     <div class="card-body">
       <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
