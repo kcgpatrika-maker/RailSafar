@@ -38,6 +38,7 @@ function translateToEnglish(text){
   }
 }
 
+
 // TRAIN BUTTON
 function askTrainName(){
   if('webkitSpeechRecognition' in window){
