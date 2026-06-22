@@ -119,7 +119,12 @@ function askTrainName(){
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
-            confirmTrainQuery(parts); // backend को साफ़ object भेजें
+            const parts = extractQueryParts(spokenText);
+            
+            // Backend को string भेजें
+          const queryLine = `${parts.destination} ${parts.train} ${parts.station} Station`;
+
+          confirmTrainQuery(queryLine);
           });
         }
       }, 100);
