@@ -122,10 +122,20 @@ function askTrainName(){
             const parts = extractQueryParts(spokenText);
             
             // Backend को साफ़ format में string भेजें
-      // सिर्फ़ तीन values: Destination + Train Name + Departure Station
-      const queryLine = `${parts.destination} जाने वाली ${parts.train} ${parts.station} स्टेशन`;
-            
-          confirmTrainQuery(queryLine);
+     const queryLine = {
+
+  destination:
+    parts.destination,
+
+  train:
+    parts.train,
+
+  station:
+    parts.station
+
+};
+
+confirmTrainQuery(queryLine);
           });
         }
       }, 100);
