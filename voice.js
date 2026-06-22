@@ -26,12 +26,18 @@ function speakText(text){
 
 // Hindi → English transliteration helper
 function translateToEnglish(text){
-  // अगर Sanscript लोड नहीं है तो fallback
-  if(typeof Sanscript !== "undefined"){
-    return Sanscript.t(text, "devanagari", "itrans");
+  try {
+    if (typeof Sanscript !== "undefined") {
+      return Sanscript.t(text, "devanagari", "itrans");
+    }
+    // अगर Sanscript नहीं है तो simple fallback
+    return text;
+  } catch (err) {
+    console.log("Transliteration error:", err.message);
+    return text;
   }
-  return text; // fallback: वही text दिखेगा
 }
+
 
 // TRAIN BUTTON
 function askTrainName(){
