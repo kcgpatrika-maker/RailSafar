@@ -24,25 +24,32 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Hindi → English transliteration helper
+// Hindi → English transliteration helper (with dictionary fallback)
 function translateToEnglish(text){
+  // Dictionary mapping for common railway words
+  const dictionary = {
+    "एक्सप्रेस":"Express",
+    "स्टेशन":"Station",
+    "रेलवे":"Railway",
+    "समय":"Time",
+    "ट्रेन":"Train"
+  };
+
+  let result = text;
+  for(const key in dictionary){
+    result = result.replace(new RegExp(key,"g"), dictionary[key]);
+  }
+
   try {
     if (typeof Sanscript !== "undefined") {
-      // पहले normalize करें
-      const clean = text.normalize("NFC");
-      // hk mode से सरल Roman letters
-      const result = Sanscript.t(clean, "devanagari", "hk");
-      return result;
+      result = Sanscript.t(result.normalize("NFC"), "devanagari", "hk");
     }
-    return text;
   } catch (err) {
     console.log("Transliteration error:", err.message);
-    return text;
   }
+
+  return result;
 }
-
-
-
 
 // TRAIN BUTTON
 function askTrainName(){
