@@ -97,9 +97,10 @@ function askTrainName(){
 `;
 
 // ✅ हाँ बटन को action दें
-document.getElementById("confirm-train-btn").onclick = function(){
-  confirmTrainQuery(translateToEnglish(spokenText));
-};
+      document.getElementById("confirm-train-btn").onclick = function(){
+        confirmTrainQuery(translateToEnglish(spokenText));
+      };
+    };
 
     recognition.onerror = function(){
       hideMic();
