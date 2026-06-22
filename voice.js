@@ -45,21 +45,28 @@ function extractQueryParts(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
-  // Destination (पहला 'जाने वाली' से पहले का हिस्सा)
-  let destinationMatch = result.match(/^(.*?) जाने वाली/);
-  let destination = destinationMatch ? destinationMatch[1].trim() : "";
+  let destination = "";
+  let train = "";
+  let station = "";
 
-  // Train name ('जाने वाली' और 'Station' के बीच)
-  let trainMatch = result.match(/जाने वाली (.*?) Station/);
-  let train = trainMatch ? trainMatch[1].trim() : "";
+  try {
+    let destMatch = result.match(/^(.*?) जाने वाली/);
+    if(destMatch) destination = destMatch[1].trim();
 
-  // Departure station ('Station' से पहले का शब्द)
-  let stationMatch = result.match(/(.*?) Station/);
-  let station = stationMatch ? stationMatch[1].trim().split(" ").pop() : "";
+    let trainMatch = result.match(/जाने वाली (.*?) Station/);
+    if(trainMatch) train = trainMatch[1].trim();
+
+    let stationMatch = result.match(/(.*?) Station/);
+    if(stationMatch) {
+      let words = stationMatch[1].trim().split(" ");
+      station = words[words.length-1];
+    }
+  } catch(e){
+    console.error("Parsing error:", e);
+  }
 
   return { destination, train, station };
 }
-
 
 // TRAIN BUTTON
 function askTrainName(){
@@ -80,32 +87,32 @@ function askTrainName(){
       const parts = extractQueryParts(spokenText);
 
       // VERIFY CARD
-      box.innerHTML = `
-        <div class="train-card">
-          <div class="card-body">
-            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-              🎤 क्या आपने यही कहा?
-            </div>
+box.innerHTML = `
+  <div class="train-card">
+    <div class="card-body">
+      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+        🎤 क्या आपने यही कहा?
+      </div>
 
-            <!-- हिंदी लाइन -->
-            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-              ${spokenText}
-            </div>
+      <!-- हिंदी लाइन -->
+      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+        ${spokenText}
+      </div>
 
-            <!-- Categories -->
-            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-              <div><b>Destination:</b> ${parts.destination}</div>
-              <div><b>Train Name:</b> ${parts.train}</div>
-              <div><b>Departure Station:</b> ${parts.station}</div>
-            </div>
+      <!-- Categories -->
+      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+        <div><b>Destination:</b> ${parts.destination || "❓"}</div>
+        <div><b>Train Name:</b> ${parts.train || "❓"}</div>
+        <div><b>Departure Station:</b> ${parts.station || "❓"}</div>
+      </div>
 
-            <div class="card-actions" style="margin-top:20px;text-align:center;">
-              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-            </div>
-          </div>
-        </div>
-      `;
+      <div class="card-actions" style="margin-top:20px;text-align:center;">
+        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+      </div>
+    </div>
+  </div>
+`;
 
       // BUTTON EVENT
       setTimeout(() => {
