@@ -28,11 +28,14 @@ function speakText(text){
 function translateToEnglish(text){
   const dictionary = {
     "रानीखेत":"Ranikhet",
+    "पूजा":"Pooja",
+    "जम्मू तवी":"Jammu Tawi",
     "एक्सप्रेस":"Express",
     "स्टेशन":"Station",
     "जयपुर":"Jaipur",
+    "दिल्ली":"Delhi",
+    "लखनऊ":"Lucknow",
     "काठगोदाम":"Kathgodam"
-    // आगे ज़रूरत पड़ने पर और जोड़ सकते हैं
   };
 
   let result = text;
@@ -40,8 +43,8 @@ function translateToEnglish(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
-  // Natural English query बनाएं
-  return `kathgodam jane wali ${result} par kab aaegi`;
+  // Parser‑friendly English query बनाएं
+  return result;
 }
 
 // TRAIN BUTTON
