@@ -121,9 +121,10 @@ function askTrainName(){
           confirmBtn.addEventListener("click", () => {
             const parts = extractQueryParts(spokenText);
             
-            // Backend को string भेजें
-          const queryLine = `${parts.destination} ${parts.train} ${parts.station} Station`;
-
+            // Backend को साफ़ format में string भेजें
+      // सिर्फ़ तीन values: Destination + Train Name + Departure Station
+      const queryLine = `${parts.destination} ${parts.train} ${parts.station}`;
+            
           confirmTrainQuery(queryLine);
           });
         }
