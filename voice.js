@@ -61,8 +61,6 @@ function translateToEnglish(text){
   return `${destination} ${train} ${station} Station`.trim();
 }
 
-
-
 // TRAIN BUTTON
 function askTrainName(){
   if('webkitSpeechRecognition' in window){
