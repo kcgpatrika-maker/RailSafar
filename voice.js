@@ -28,8 +28,8 @@ function speakText(text){
 function translateToEnglish(text){
   try {
     if (typeof Sanscript !== "undefined") {
-      // "iast" mode Roman letters देता है
-      return Sanscript.t(text, "devanagari", "iast");
+      // "hk" mode से सरल Roman letters मिलेंगे
+      return Sanscript.t(text, "devanagari", "hk");
     }
     return text; // fallback
   } catch (err) {
@@ -37,6 +37,7 @@ function translateToEnglish(text){
     return text;
   }
 }
+
 
 
 // TRAIN BUTTON
