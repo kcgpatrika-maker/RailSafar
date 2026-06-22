@@ -28,15 +28,19 @@ function speakText(text){
 function translateToEnglish(text){
   try {
     if (typeof Sanscript !== "undefined") {
-      // "hk" mode से सरल Roman letters मिलेंगे
-      return Sanscript.t(text, "devanagari", "hk");
+      // पहले normalize करें
+      const clean = text.normalize("NFC");
+      // hk mode से सरल Roman letters
+      const result = Sanscript.t(clean, "devanagari", "hk");
+      return result;
     }
-    return text; // fallback
+    return text;
   } catch (err) {
     console.log("Transliteration error:", err.message);
     return text;
   }
 }
+
 
 
 
