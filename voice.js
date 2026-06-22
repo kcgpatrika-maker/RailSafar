@@ -28,13 +28,16 @@ function speakText(text){
 function translateToEnglish(text){
   const dictionary = {
     "जम्मू तवी":"Jammu Tawi",
+    "मरुधर":"Marudhar",
     "पूजा":"Pooja",
+    "रानीखेत":"Ranikhet",
     "एक्सप्रेस":"Express",
     "स्टेशन":"Station",
     "जयपुर":"Jaipur",
     "दिल्ली":"Delhi",
     "लखनऊ":"Lucknow",
-    "काठगोदाम":"Kathgodam"
+    "काठगोदाम":"Kathgodam",
+    "वाराणसी":"Varanasi"
   };
 
   let result = text;
@@ -42,22 +45,22 @@ function translateToEnglish(text){
     result = result.replace(new RegExp(key,"g"), dictionary[key]);
   }
 
-  // अब तीन हिस्से निकालें
-  // 1. गंतव्य (पहला 'जाने वाली' से पहले का हिस्सा)
+  // 1. Destination (पहला 'जाने वाली' से पहले का हिस्सा)
   let destinationMatch = result.match(/^(.*?) जाने वाली/);
   let destination = destinationMatch ? destinationMatch[1].trim() : "";
 
-  // 2. ट्रेन नाम ('जाने वाली' और 'स्टेशन' के बीच)
+  // 2. Train name ('जाने वाली' और 'Station' के बीच)
   let trainMatch = result.match(/जाने वाली (.*?) Station/);
   let train = trainMatch ? trainMatch[1].trim() : "";
 
-  // 3. स्टेशन नाम ('Station' से पहले का शब्द)
+  // 3. Station (Station से पहले का शब्द)
   let stationMatch = result.match(/(.*?) Station/);
-  let station = stationMatch ? stationMatch[1].trim() : "";
+  let station = stationMatch ? stationMatch[1].trim().split(" ").pop() : "";
 
-  // Parser‑friendly query बनाएं
+  // Final clean query
   return `${destination} ${train} ${station} Station`.trim();
 }
+
 
 
 // TRAIN BUTTON
