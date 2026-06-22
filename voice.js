@@ -109,8 +109,9 @@ box.innerHTML = `
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
-            const englishLine = translateToEnglish(spokenText);
-            confirmTrainQuery(englishLine); // backend को English लाइन भेजें
+            const parts = extractQueryParts(spokenText); 
+      // parts = { destination, train, station }
+            confirmTrainQuery(parts); // backend को साफ़ object भेजें
           });
         }
       }, 100);
