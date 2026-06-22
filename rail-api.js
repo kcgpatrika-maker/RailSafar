@@ -42,10 +42,7 @@ async function fetchRailData(query){
             "Content-Type":"application/json"
           },
 
-          body:JSON.stringify({
-
-            query:query
-          })
+          body:JSON.stringify(query)
         }
       );
 
