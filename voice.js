@@ -75,42 +75,43 @@ function askTrainName(){
       hideMic();
       const spokenText = event.results[0][0].transcript.trim();
       const box = document.getElementById("output-box");
-      
+
+      // तीन values निकालें
+      const parts = extractQueryParts(spokenText);
+
       // VERIFY CARD
-box.innerHTML = `
-  <div class="train-card">
-    <div class="card-body">
-      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-        🎤 क्या आपने यही कहा?
-      </div>
+      box.innerHTML = `
+        <div class="train-card">
+          <div class="card-body">
+            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+              🎤 क्या आपने यही कहा?
+            </div>
 
-      <!-- हिंदी लाइन -->
-      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-        ${spokenText}
-      </div>
+            <!-- हिंदी लाइन -->
+            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+              ${spokenText}
+            </div>
 
-      <!-- English categories -->
-      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-        <div><b>Destination:</b> ${destination}</div>
-        <div><b>Train Name:</b> ${train}</div>
-        <div><b>Departure Station:</b> ${station}</div>
-      </div>
+            <!-- Categories -->
+            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+              <div><b>Destination:</b> ${parts.destination}</div>
+              <div><b>Train Name:</b> ${parts.train}</div>
+              <div><b>Departure Station:</b> ${parts.station}</div>
+            </div>
 
-      <div class="card-actions" style="margin-top:20px;text-align:center;">
-        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-      </div>
-    </div>
-  </div>
-`;
+            <div class="card-actions" style="margin-top:20px;text-align:center;">
+              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+            </div>
+          </div>
+        </div>
+      `;
 
       // BUTTON EVENT
       setTimeout(() => {
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
-            const parts = extractQueryParts(spokenText); 
-      // parts = { destination, train, station }
             confirmTrainQuery(parts); // backend को साफ़ object भेजें
           });
         }
@@ -127,6 +128,7 @@ box.innerHTML = `
     alert("Voice Support उपलब्ध नहीं है");
   }
 }
+
 
 // DIRECTIONS BUTTON
 function askDirections(){
