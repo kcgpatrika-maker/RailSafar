@@ -52,11 +52,18 @@ function extractQueryParts(text){
 
   // Train Name = 'जाने वाली' के बाद के दो शब्द OR 'जाने वाली' और 'Station' के बीच
   let train = "";
-  let trainMatch = result.match(/जाने वाली (.*?) Station/);
-  if(trainMatch){
-    let words = trainMatch[1].trim().split(" ");
-    train = words.slice(0,2).join(" "); // सिर्फ़ दो शब्द लें
-  }
+
+let trainMatch =
+  result.match(
+    /जाने वाली (.*?) ([A-Za-z]+)\sStation/i
+  );
+
+if(trainMatch){
+
+  train =
+    trainMatch[1].trim();
+
+}
 
   // Departure Station = 'Station' और उसके पहले का शब्द
   let station = "";
