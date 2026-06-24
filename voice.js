@@ -26,53 +26,103 @@ function speakText(text){
 
 // Hindi → English transliteration helper
 function extractQueryParts(text){
+
   const dictionary = {
+
     "जम्मू तवी":"Jammu Tawi",
     "मरुधर":"Marudhar",
     "पूजा":"Pooja",
     "रानीखेत":"Ranikhet",
+    "दौलतपुर":"Daulatpur",
+    "प्रयागराज":"Prayagraj",
+    "गोमती":"Gomti",
+
     "एक्सप्रेस":"Express",
-    "स्टेशन":"Station",
+    "इंटरसिटी":"Intercity",
+
     "जयपुर":"Jaipur",
     "दिल्ली":"Delhi",
     "लखनऊ":"Lucknow",
-    "काठगोदाम":"Kathgodam",
-    "वाराणसी":"Varanasi"
+    "अजमेर":"Ajmer",
+    "अलवर":"Alwar",
+    "जोधपुर":"Jodhpur",
+    "आगरा":"Agra",
+    "वाराणसी":"Varanasi",
+
+    "स्टेशन":"Station"
+
   };
 
   let result = text;
+
   for(const key in dictionary){
-    result = result.replace(new RegExp(key,"g"), dictionary[key]);
+
+    result =
+      result.replace(
+        new RegExp(key,"g"),
+        dictionary[key]
+      );
+
   }
 
-  // Destination = 'जाने वाली' से पहले का हिस्सा
   let destination = "";
-  let destMatch = result.match(/^(.*?) जाने वाली/);
-  if(destMatch) destination = destMatch[1].trim();
-
-  // Train Name = 'जाने वाली' के बाद के दो शब्द OR 'जाने वाली' और 'Station' के बीच
   let train = "";
-
-let trainMatch =
-  result.match(
-    /जाने वाली (.*?) ([A-Za-z]+)\sStation/i
-  );
-
-if(trainMatch){
-
-  train =
-    trainMatch[1].trim();
-
-}
-
-  // Departure Station = 'Station' और उसके पहले का शब्द
   let station = "";
-  let stationMatch = result.match(/(\w+)\sStation/);
-  if(stationMatch){
-    station = stationMatch[1].trim();
+
+  // Destination
+
+  const destMatch =
+    result.match(
+      /^(.*?)\s+जाने\s+वाली/i
+    );
+
+  if(destMatch){
+
+    destination =
+      destMatch[1].trim();
+
   }
 
-  return { destination, train, station };
+  // Station
+
+  const stationMatch =
+    result.match(
+      /([A-Za-z]+)\s+Station/i
+    );
+
+  if(stationMatch){
+
+    station =
+      stationMatch[1].trim();
+
+  }
+
+  // Train Name
+
+  let trainPart = result;
+
+  trainPart =
+    trainPart.replace(
+      /^.*?जाने\s+वाली/i,
+      ""
+    );
+
+  trainPart =
+    trainPart.replace(
+      /[A-Za-z]+\s+Station.*$/i,
+      ""
+    );
+
+  train = trainPart.trim();
+
+  return {
+
+    destination,
+    train,
+    station
+
+  };
+
 }
 
 // TRAIN BUTTON
