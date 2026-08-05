@@ -24,105 +24,63 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Hindi → English transliteration helper
-function extractQueryParts(text){
+// ==========================================================
+// FIXED TEMPLATE PARSER
+// अपेक्षित वाक्य-रचना:
+// "[गंतव्य] स्टेशन को जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] स्टेशन पर कब आएगी"
+// उदाहरण:
+// "अजमेर स्टेशन को जाने वाली मरुधर एक्सप्रेस जयपुर स्टेशन पर कब आएगी"
+// ==========================================================
+function parseFixedTemplate(text){
 
-  const dictionary = {
+  text = text.trim();
 
-    "जम्मू तवी":"Jammu Tawi",
-    "मरुधर":"Marudhar",
-    "पूजा":"Pooja",
-    "रानीखेत":"Ranikhet",
-    "दौलतपुर":"Daulatpur",
-    "प्रयागराज":"Prayagraj",
-    "गोमती":"Gomti",
+  // "को" वैकल्पिक रखा है (कई बार वॉइस रिकॉग्निशन इसे छोड़ देता है)
+  // आगमन क्रिया के कई रूप भी स्वीकार किए हैं (आएगी/आयेगी/पहुंचेगी/पहुँचेगी)
+  const pattern =
+    /^(.+?)\s*स्टेशन\s*(?:को\s*)?जाने\s*वाली\s+(.+?)\s*(एक्सप्रेस|पैसेंजर)(?:\s*ट्रेन)?\s+(.+?)\s*स्टेशन\s*पर\s*कब\s*(?:आएगी|आयेगी|पहुंचेगी|पहुँचेगी)/;
 
-    "एक्सप्रेस":"Express",
-    "इंटरसिटी":"Intercity",
+  const match = text.match(pattern);
 
-    "जयपुर":"Jaipur",
-    "दिल्ली":"Delhi",
-    "लखनऊ":"Lucknow",
-    "अजमेर":"Ajmer",
-    "अलवर":"Alwar",
-    "जोधपुर":"Jodhpur",
-    "आगरा":"Agra",
-    "वाराणसी":"Varanasi",
-
-    "स्टेशन":"Station"
-
-  };
-
-  let result = text;
-
-  for(const key in dictionary){
-
-    result =
-      result.replace(
-        new RegExp(key,"g"),
-        dictionary[key]
-      );
-
+  if(!match){
+    return null;
   }
-
-  let destination = "";
-  let train = "";
-  let station = "";
-
-  // Destination
-
-  const destMatch =
-    result.match(
-      /^(.*?)\s+जाने\s+वाली/i
-    );
-
-  if(destMatch){
-
-    destination =
-      destMatch[1].trim();
-
-  }
-
-  // Station
-
-  const stationMatch =
-    result.match(
-      /([A-Za-z]+)\s+Station/i
-    );
-
-  if(stationMatch){
-
-    station =
-      stationMatch[1].trim();
-
-  }
-
-  // Train Name
-
-  let trainPart = result;
-
-  trainPart =
-    trainPart.replace(
-      /^.*?जाने\s+वाली/i,
-      ""
-    );
-
-  trainPart =
-    trainPart.replace(
-      /[A-Za-z]+\s+Station.*$/i,
-      ""
-    );
-
-  train = trainPart.trim();
 
   return {
-
-    destination,
-    train,
-    station
-
+    destination: match[1].trim(),
+    trainName: (match[2].trim() + " " + match[3].trim()).trim(),
+    startStation: match[4].trim()
   };
+}
 
+// फॉर्मेट-मदद कार्ड (जब पैटर्न मैच न हो)
+function showFormatHelp(){
+
+  const box = document.getElementById("output-box");
+
+  box.innerHTML = `
+    <div class="train-card">
+      <div class="card-body" style="text-align:center;">
+
+        <div style="font-size:17px;font-weight:bold;margin-bottom:10px;">
+          ❌ समझ नहीं आया
+        </div>
+
+        <div style="background:#fff7ed;padding:14px;border-radius:12px;font-size:15px;line-height:1.7;text-align:left;">
+          कृपया इस तरह पूछिये:<br><br>
+          <b>"[गंतव्य] स्टेशन को जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] स्टेशन पर कब आएगी"</b>
+          <br><br>
+          उदाहरण:<br>
+          "अजमेर स्टेशन को जाने वाली मरुधर एक्सप्रेस जयपुर स्टेशन पर कब आएगी"
+        </div>
+
+        <button class="action-btn" style="margin-top:16px;" onclick="askTrainName()">
+          🎤 फिर से बोलिये
+        </button>
+
+      </div>
+    </div>
+  `;
 }
 
 // TRAIN BUTTON
@@ -140,59 +98,55 @@ function askTrainName(){
       const spokenText = event.results[0][0].transcript.trim();
       const box = document.getElementById("output-box");
 
-      // तीन values निकालें
-      const parts = extractQueryParts(spokenText);
+      // फिक्स्ड टेम्पलेट से तीनों जानकारी निकालें
+      const parts = parseFixedTemplate(spokenText);
+
+      // पैटर्न मैच नहीं हुआ — सीधा फॉर्मेट बताएं, वेरिफाई कार्ड मत दिखाएं
+      if(!parts){
+        showFormatHelp();
+        return;
+      }
 
       // VERIFY CARD
       box.innerHTML = `
-  <div class="train-card">
-    <div class="card-body">
-      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-        🎤 क्या आपने यही कहा?
-      </div>
+        <div class="train-card">
+          <div class="card-body">
+            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+              🎤 क्या आपने यही कहा?
+            </div>
 
-      <!-- हिंदी लाइन -->
-      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-        ${spokenText}
-      </div>
+            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+              ${spokenText}
+            </div>
 
-      <!-- Categories -->
-      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-        <div><b>Destination:</b> ${parts.destination || "❓"}</div>
-        <div><b>Train Name:</b> ${parts.train || "❓"}</div>
-        <div><b>Departure Station:</b> ${parts.station || "❓"}</div>
-      </div>
+            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+              <div><b>गंतव्य:</b> ${parts.destination}</div>
+              <div><b>ट्रेन:</b> ${parts.trainName}</div>
+              <div><b>स्टेशन:</b> ${parts.startStation}</div>
+            </div>
 
-      <div class="card-actions" style="margin-top:20px;text-align:center;">
-        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-      </div>
-    </div>
-  </div>
-`;
+            <div class="card-actions" style="margin-top:20px;text-align:center;">
+              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+            </div>
+          </div>
+        </div>
+      `;
 
       // BUTTON EVENT
       setTimeout(() => {
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
-            const parts = extractQueryParts(spokenText);
-            
-            // Backend को साफ़ format में string भेजें
-     const queryLine = {
 
-  destination:
-    parts.destination,
+            // backend को साफ़, पहले से पार्स्ड फ़ील्ड्स भेजें
+            const queryLine = {
+              destination: parts.destination,
+              train: parts.trainName,
+              station: parts.startStation
+            };
 
-  train:
-    parts.train,
-
-  station:
-    parts.station
-
-};
-
-confirmTrainQuery(queryLine);
+            confirmTrainQuery(queryLine);
           });
         }
       }, 100);
