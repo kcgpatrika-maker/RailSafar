@@ -94,8 +94,11 @@ function parseFixedTemplate(text){
   }
 
   // STEP 3 — बचे हुए हिस्से में से "पर" से पहले का स्टेशन-नाम निकालें
+  // ध्यान दें: यहां \b (word boundary) जानबूझकर नहीं लगाया —
+  // JavaScript का \b देवनागरी अक्षरों को पहचानता ही नहीं, इसलिए
+  // \s (स्पष्ट स्पेस) के आधार पर मैच किया गया है
   const stationSplit =
-    afterTrain.match(/^(.+?)\s*पर\b/);
+    afterTrain.match(/^(.+?)\s+पर(?:\s+|$)/);
 
   if(!stationSplit){
     return null;
