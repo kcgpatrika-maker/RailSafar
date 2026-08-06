@@ -54,7 +54,9 @@ function parseFixedTemplate(text){
 }
 
 // फॉर्मेट-मदद कार्ड (जब पैटर्न मैच न हो)
-function showFormatHelp(){
+// spokenText यहां इसलिए दिखाया जा रहा है ताकि यह पता चल सके
+// कि वॉइस रिकग्निशन ने असल में क्या टेक्स्ट पहचाना — डिबगिंग के लिए
+function showFormatHelp(spokenText){
 
   const box = document.getElementById("output-box");
 
@@ -64,6 +66,10 @@ function showFormatHelp(){
 
         <div style="font-size:17px;font-weight:bold;margin-bottom:10px;">
           ❌ समझ नहीं आया
+        </div>
+
+        <div style="background:#eef4ff;padding:10px;border-radius:10px;font-size:14px;color:#2563eb;margin-bottom:10px;text-align:left;">
+          <b>पहचाना गया टेक्स्ट:</b><br>${spokenText}
         </div>
 
         <div style="background:#fff7ed;padding:14px;border-radius:12px;font-size:15px;line-height:1.7;text-align:left;">
@@ -103,7 +109,7 @@ function askTrainName(){
 
       // पैटर्न मैच नहीं हुआ — सीधा फॉर्मेट बताएं, वेरिफाई कार्ड मत दिखाएं
       if(!parts){
-        showFormatHelp();
+        showFormatHelp(spokenText);
         return;
       }
 
@@ -120,9 +126,9 @@ function askTrainName(){
             </div>
 
             <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-              <div><b>गंतव्य:</b> ${parts.destination}</div>
-              <div><b>ट्रेन:</b> ${parts.trainName}</div>
-              <div><b>स्टेशन:</b> ${parts.startStation}</div>
+              <div><b>Destination:</b> ${parts.destination}</div>
+              <div><b>Train Name:</b> ${parts.trainName}</div>
+              <div><b>Departure Station:</b> ${parts.startStation}</div>
             </div>
 
             <div class="card-actions" style="margin-top:20px;text-align:center;">
