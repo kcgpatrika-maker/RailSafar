@@ -24,135 +24,105 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// ==========================================================
-// FIXED TEMPLATE PARSER (लचीला संस्करण)
-// अपेक्षित ढांचा:
-// "[गंतव्य] (स्टेशन को)? जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] (स्टेशन)? पर [कब आएगी / कितने बजे आएगी / ...]"
-//
-// यहां हर हिस्सा अलग-अलग टुकड़े में पहचाना जाता है, ताकि
-// "स्टेशन", "को" जैसे छोटे शब्द हों या छूट जाएं, और आखिरी
-// सवाल "कब आएगी" हो या "कितने बजे आएगी" — दोनों काम करें।
-// ==========================================================
+// Hindi → English transliteration helper
+function extractQueryParts(text){
 
-const TRAIN_TYPE_KEYWORDS = [
-  "एक्सप्रेस",
-  "पैसेंजर",
-  "सुपरफास्ट",
-  "इंटरसिटी",
-  "जनशताब्दी",
-  "जन शताब्दी",
-  "शताब्दी",
-  "राजधानी",
-  "दुरंतो",
-  "हमसफर",
-  "वंदे भारत",
-  "वंदेभारत",
-  "मेल"
-];
+  const dictionary = {
 
-function parseFixedTemplate(text){
+    "जम्मू तवी":"Jammu Tawi",
+    "मरुधर":"Marudhar",
+    "पूजा":"Pooja",
+    "रानीखेत":"Ranikhet",
+    "दौलतपुर":"Daulatpur",
+    "प्रयागराज":"Prayagraj",
+    "गोमती":"Gomti",
 
-  text = text.trim();
+    "एक्सप्रेस":"Express",
+    "इंटरसिटी":"Intercity",
 
-  // STEP 1 — "जाने वाली" से गंतव्य को अलग करें
-  const destSplit =
-    text.match(/^(.+?)\s*जाने\s*वाली\s+(.+)$/);
+    "जयपुर":"Jaipur",
+    "दिल्ली":"Delhi",
+    "लखनऊ":"Lucknow",
+    "अजमेर":"Ajmer",
+    "अलवर":"Alwar",
+    "जोधपुर":"Jodhpur",
+    "आगरा":"Agra",
+    "वाराणसी":"Varanasi",
 
-  if(!destSplit){
-    return null;
+    "स्टेशन":"Station"
+
+  };
+
+  let result = text;
+
+  for(const key in dictionary){
+
+    result =
+      result.replace(
+        new RegExp(key,"g"),
+        dictionary[key]
+      );
+
   }
 
-  // गंतव्य के आखिर में "स्टेशन" / "को" हो तो हटा दें
-  let destination = destSplit[1]
-    .replace(/स्टेशन\s*(को)?\s*$/,"")
-    .replace(/को\s*$/,"")
-    .trim();
+  let destination = "";
+  let train = "";
+  let station = "";
 
-  let rest = destSplit[2].trim();
+  // Destination
 
-  // STEP 2 — रेस्ट में से ट्रेन-टाइप कीवर्ड ढूंढकर ट्रेन-नाम अलग करें
-  let trainName = null;
-  let afterTrain = null;
+  const destMatch =
+    result.match(
+      /^(.*?)\s+जाने\s+वाली/i
+    );
 
-  for(const keyword of TRAIN_TYPE_KEYWORDS){
+  if(destMatch){
 
-    const idx = rest.indexOf(keyword);
+    destination =
+      destMatch[1].trim();
 
-    if(idx !== -1){
-      trainName =
-        rest.slice(0, idx + keyword.length).trim();
-
-      afterTrain =
-        rest.slice(idx + keyword.length).trim();
-
-      break;
-    }
   }
 
-  if(!trainName || !afterTrain){
-    return null;
+  // Station
+
+  const stationMatch =
+    result.match(
+      /([A-Za-z]+)\s+Station/i
+    );
+
+  if(stationMatch){
+
+    station =
+      stationMatch[1].trim();
+
   }
 
-  // STEP 3 — बचे हुए हिस्से में से "पर" से पहले का स्टेशन-नाम निकालें
-  // ध्यान दें: यहां \b (word boundary) जानबूझकर नहीं लगाया —
-  // JavaScript का \b देवनागरी अक्षरों को पहचानता ही नहीं, इसलिए
-  // \s (स्पष्ट स्पेस) के आधार पर मैच किया गया है
-  const stationSplit =
-    afterTrain.match(/^(.+?)\s+पर(?:\s+|$)/);
+  // Train Name
 
-  if(!stationSplit){
-    return null;
-  }
+  let trainPart = result;
 
-  let startStation = stationSplit[1]
-    .replace(/स्टेशन\s*$/,"")
-    .trim();
+  trainPart =
+    trainPart.replace(
+      /^.*?जाने\s+वाली/i,
+      ""
+    );
 
-  if(!destination || !trainName || !startStation){
-    return null;
-  }
+  trainPart =
+    trainPart.replace(
+      /[A-Za-z]+\s+Station.*$/i,
+      ""
+    );
+
+  train = trainPart.trim();
 
   return {
+
     destination,
-    trainName,
-    startStation
+    train,
+    station
+
   };
-}
 
-// फॉर्मेट-मदद कार्ड (जब पैटर्न मैच न हो)
-// spokenText यहां इसलिए दिखाया जा रहा है ताकि यह पता चल सके
-// कि वॉइस रिकग्निशन ने असल में क्या टेक्स्ट पहचाना — डिबगिंग के लिए
-function showFormatHelp(spokenText){
-
-  const box = document.getElementById("output-box");
-
-  box.innerHTML = `
-    <div class="train-card">
-      <div class="card-body" style="text-align:center;">
-
-        <div style="font-size:17px;font-weight:bold;margin-bottom:10px;">
-          ❌ समझ नहीं आया
-        </div>
-
-        <div style="background:#eef4ff;padding:10px;border-radius:10px;font-size:14px;color:#2563eb;margin-bottom:10px;text-align:left;">
-          <b>पहचाना गया टेक्स्ट:</b><br>${spokenText}
-        </div>
-
-        <div style="background:#fff7ed;padding:14px;border-radius:12px;font-size:15px;line-height:1.7;text-align:left;">
-          कृपया इस तरह पूछिये:<br><br>
-          <b>"[गंतव्य] स्टेशन को जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] स्टेशन पर कब आएगी"</b>
-          <br><br>
-          उदाहरण:<br>
-          "अजमेर स्टेशन को जाने वाली मरुधर एक्सप्रेस जयपुर स्टेशन पर कब आएगी"
-        </div>
-
-        <button class="action-btn" style="margin-top:16px;" onclick="askTrainName()">
-          🎤 फिर से बोलिये
-        </button>
-
-      </div>
-    </div>
-  `;
 }
 
 // TRAIN BUTTON
@@ -170,55 +140,59 @@ function askTrainName(){
       const spokenText = event.results[0][0].transcript.trim();
       const box = document.getElementById("output-box");
 
-      // फिक्स्ड टेम्पलेट से तीनों जानकारी निकालें
-      const parts = parseFixedTemplate(spokenText);
-
-      // पैटर्न मैच नहीं हुआ — सीधा फॉर्मेट बताएं, वेरिफाई कार्ड मत दिखाएं
-      if(!parts){
-        showFormatHelp(spokenText);
-        return;
-      }
+      // तीन values निकालें
+      const parts = extractQueryParts(spokenText);
 
       // VERIFY CARD
       box.innerHTML = `
-        <div class="train-card">
-          <div class="card-body">
-            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-              🎤 क्या आपने यही कहा?
-            </div>
+  <div class="train-card">
+    <div class="card-body">
+      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+        🎤 क्या आपने यही कहा?
+      </div>
 
-            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-              ${spokenText}
-            </div>
+      <!-- हिंदी लाइन -->
+      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+        ${spokenText}
+      </div>
 
-            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-              <div><b>Destination:</b> ${parts.destination}</div>
-              <div><b>Train Name:</b> ${parts.trainName}</div>
-              <div><b>Departure Station:</b> ${parts.startStation}</div>
-            </div>
+      <!-- Categories -->
+      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+        <div><b>Destination:</b> ${parts.destination || "❓"}</div>
+        <div><b>Train Name:</b> ${parts.train || "❓"}</div>
+        <div><b>Departure Station:</b> ${parts.station || "❓"}</div>
+      </div>
 
-            <div class="card-actions" style="margin-top:20px;text-align:center;">
-              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-            </div>
-          </div>
-        </div>
-      `;
+      <div class="card-actions" style="margin-top:20px;text-align:center;">
+        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+      </div>
+    </div>
+  </div>
+`;
 
       // BUTTON EVENT
       setTimeout(() => {
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
+            const parts = extractQueryParts(spokenText);
+            
+            // Backend को साफ़ format में string भेजें
+     const queryLine = {
 
-            // backend को साफ़, पहले से पार्स्ड फ़ील्ड्स भेजें
-            const queryLine = {
-              destination: parts.destination,
-              train: parts.trainName,
-              station: parts.startStation
-            };
+  destination:
+    parts.destination,
 
-            confirmTrainQuery(queryLine);
+  train:
+    parts.train,
+
+  station:
+    parts.station
+
+};
+
+confirmTrainQuery(queryLine);
           });
         }
       }, 100);
