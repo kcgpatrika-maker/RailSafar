@@ -25,31 +25,94 @@ function speakText(text){
 }
 
 // ==========================================================
-// FIXED TEMPLATE PARSER
-// अपेक्षित वाक्य-रचना:
-// "[गंतव्य] स्टेशन को जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] स्टेशन पर कब आएगी"
-// उदाहरण:
-// "अजमेर स्टेशन को जाने वाली मरुधर एक्सप्रेस जयपुर स्टेशन पर कब आएगी"
+// FIXED TEMPLATE PARSER (लचीला संस्करण)
+// अपेक्षित ढांचा:
+// "[गंतव्य] (स्टेशन को)? जाने वाली [ट्रेन नाम] एक्सप्रेस/पैसेंजर [स्टेशन] (स्टेशन)? पर [कब आएगी / कितने बजे आएगी / ...]"
+//
+// यहां हर हिस्सा अलग-अलग टुकड़े में पहचाना जाता है, ताकि
+// "स्टेशन", "को" जैसे छोटे शब्द हों या छूट जाएं, और आखिरी
+// सवाल "कब आएगी" हो या "कितने बजे आएगी" — दोनों काम करें।
 // ==========================================================
+
+const TRAIN_TYPE_KEYWORDS = [
+  "एक्सप्रेस",
+  "पैसेंजर",
+  "सुपरफास्ट",
+  "इंटरसिटी",
+  "जनशताब्दी",
+  "जन शताब्दी",
+  "शताब्दी",
+  "राजधानी",
+  "दुरंतो",
+  "हमसफर",
+  "वंदे भारत",
+  "वंदेभारत",
+  "मेल"
+];
+
 function parseFixedTemplate(text){
 
   text = text.trim();
 
-  // "को" वैकल्पिक रखा है (कई बार वॉइस रिकॉग्निशन इसे छोड़ देता है)
-  // आगमन क्रिया के कई रूप भी स्वीकार किए हैं (आएगी/आयेगी/पहुंचेगी/पहुँचेगी)
-  const pattern =
-    /^(.+?)\s*स्टेशन\s*(?:को\s*)?जाने\s*वाली\s+(.+?)\s*(एक्सप्रेस|पैसेंजर)(?:\s*ट्रेन)?\s+(.+?)\s*स्टेशन\s*पर\s*कब\s*(?:आएगी|आयेगी|पहुंचेगी|पहुँचेगी)/;
+  // STEP 1 — "जाने वाली" से गंतव्य को अलग करें
+  const destSplit =
+    text.match(/^(.+?)\s*जाने\s*वाली\s+(.+)$/);
 
-  const match = text.match(pattern);
+  if(!destSplit){
+    return null;
+  }
 
-  if(!match){
+  // गंतव्य के आखिर में "स्टेशन" / "को" हो तो हटा दें
+  let destination = destSplit[1]
+    .replace(/स्टेशन\s*(को)?\s*$/,"")
+    .replace(/को\s*$/,"")
+    .trim();
+
+  let rest = destSplit[2].trim();
+
+  // STEP 2 — रेस्ट में से ट्रेन-टाइप कीवर्ड ढूंढकर ट्रेन-नाम अलग करें
+  let trainName = null;
+  let afterTrain = null;
+
+  for(const keyword of TRAIN_TYPE_KEYWORDS){
+
+    const idx = rest.indexOf(keyword);
+
+    if(idx !== -1){
+      trainName =
+        rest.slice(0, idx + keyword.length).trim();
+
+      afterTrain =
+        rest.slice(idx + keyword.length).trim();
+
+      break;
+    }
+  }
+
+  if(!trainName || !afterTrain){
+    return null;
+  }
+
+  // STEP 3 — बचे हुए हिस्से में से "पर" से पहले का स्टेशन-नाम निकालें
+  const stationSplit =
+    afterTrain.match(/^(.+?)\s*पर\b/);
+
+  if(!stationSplit){
+    return null;
+  }
+
+  let startStation = stationSplit[1]
+    .replace(/स्टेशन\s*$/,"")
+    .trim();
+
+  if(!destination || !trainName || !startStation){
     return null;
   }
 
   return {
-    destination: match[1].trim(),
-    trainName: (match[2].trim() + " " + match[3].trim()).trim(),
-    startStation: match[4].trim()
+    destination,
+    trainName,
+    startStation
   };
 }
 
