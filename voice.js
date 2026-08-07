@@ -85,10 +85,7 @@ function extractQueryParts(text){
 
   // Station
 
-  const stationMatch =
-    result.match(
-      /([A-Za-z]+)\s+Station/i
-    );
+  const stationMatch = result.match(/([^\s]+)\s+(?:Station|स्टेशन)/i);
 
   if(stationMatch){
 
@@ -107,11 +104,7 @@ function extractQueryParts(text){
       ""
     );
 
-  trainPart =
-    trainPart.replace(
-      /[A-Za-z]+\s+Station.*$/i,
-      ""
-    );
+  trainPart = trainPart.replace(/([^\s]+\s+(?:Station|स्टेशन)).*$/i, "");
 
   train = trainPart.trim();
 
