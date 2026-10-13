@@ -24,98 +24,50 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Hindi → English transliteration helper
+// Advanced Part Extractor (Handles Express, Passenger, Big/Small Stations & Sentences)
 function extractQueryParts(text){
-
-  const dictionary = {
-
-    "जम्मू तवी":"Jammu Tawi",
-    "मरुधर":"Marudhar",
-    "पूजा":"Pooja",
-    "रानीखेत":"Ranikhet",
-    "दौलतपुर":"Daulatpur",
-    "प्रयागराज":"Prayagraj",
-    "गोमती":"Gomti",
-
-    "एक्सप्रेस":"Express",
-    "इंटरसिटी":"Intercity",
-
-    "जयपुर":"Jaipur",
-    "दिल्ली":"Delhi",
-    "लखनऊ":"Lucknow",
-    "अजमेर":"Ajmer",
-    "अलवर":"Alwar",
-    "जोधपुर":"Jodhpur",
-    "आगरा":"Agra",
-    "वाराणसी":"Varanasi",
-
-    "स्टेशन":"Station"
-
-  };
-
-  let result = text;
-
-  for(const key in dictionary){
-
-    result =
-      result.replace(
-        new RegExp(key,"g"),
-        dictionary[key]
-      );
-
-  }
+  let cleanText = text.trim();
 
   let destination = "";
   let train = "";
   let station = "";
 
-  // Destination
-
-  const destMatch =
-    result.match(
-      /^(.*?)\s+जाने\s+वाली/i
-    );
-
+  // 1. गंतव्य (Destination) निकालना - जैसे "दिल्ली जाने वाली" या "Delhi bound"
+  const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+/i);
   if(destMatch){
-
-    destination =
-      destMatch[1].trim();
-
+    destination = destMatch[1].trim();
+    cleanText = cleanText.replace(destMatch[0], "").trim();
   }
 
-  // Station
-
-  const stationMatch = result.match(/([^\s]+)\s+(?:Station|स्टेशन)/i);
-
+  // 2. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "Jaipur station"
+  const stationMatch = cleanText.match(/([^\s]+)\s+(?:स्टेशन|Station|स्टेशन\s+पर|Station\s+at)\s*/i);
   if(stationMatch){
-
-    station =
-      stationMatch[1].trim();
-
+    station = stationMatch[1].trim();
+    cleanText = cleanText.replace(stationMatch[0], "").trim();
+  } else {
+    const fallbackStationMatch = cleanText.match(/([^\s+]{3,})\s+पर\s+/i);
+    if(fallbackStationMatch){
+      station = fallbackStationMatch[1].trim();
+    }
   }
 
-  // Train Name
-
-  let trainPart = result;
-
-  trainPart =
-    trainPart.replace(
-      /^.*?जाने\s+वाली/i,
-      ""
-    );
-
-  trainPart = trainPart.replace(/([^\s]+\s+(?:Station|स्टेशन)).*$/i, "");
+  // 3. बचा हुआ हिस्सा ट्रेन का नाम (Express, Passenger, Local, MEMU कुछ भी हो सकता है)
+  let trainPart = cleanText;
+  
+  trainPart = trainPart.replace(/(?:कब\s+)?(?:आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|कहाँ\s+है|कहां\s+है|बताओ|देखनी\s+है).*$/i, "").trim();
+  trainPart = trainPart.replace(/^(?:की|का|के)\s+/i, "").trim();
 
   train = trainPart.trim();
 
+  if(!train){
+    train = text.trim();
+  }
+
   return {
-
-    destination,
-    train,
-    station
-
+    destination: destination || "उपलब्ध नहीं",
+    train: train,
+    station: station || "मुख्य स्टेशन"
   };
-
 }
 
 // TRAIN BUTTON
@@ -133,7 +85,6 @@ function askTrainName(){
       const spokenText = event.results[0][0].transcript.trim();
       const box = document.getElementById("output-box");
 
-      // तीन values निकालें
       const parts = extractQueryParts(spokenText);
 
       // VERIFY CARD
@@ -151,9 +102,9 @@ function askTrainName(){
 
       <!-- Categories -->
       <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-        <div><b>Destination:</b> ${parts.destination || "❓"}</div>
-        <div><b>Train Name:</b> ${parts.train || "❓"}</div>
-        <div><b>Departure Station:</b> ${parts.station || "❓"}</div>
+        <div><b>Destination:</b> ${parts.destination}</div>
+        <div><b>Train Name:</b> ${parts.train}</div>
+        <div><b>Departure Station:</b> ${parts.station}</div>
       </div>
 
       <div class="card-actions" style="margin-top:20px;text-align:center;">
@@ -171,21 +122,13 @@ function askTrainName(){
           confirmBtn.addEventListener("click", () => {
             const parts = extractQueryParts(spokenText);
             
-            // Backend को साफ़ format में string भेजें
-     const queryLine = {
+            const queryLine = {
+              destination: parts.destination,
+              train: parts.train,
+              station: parts.station
+            };
 
-  destination:
-    parts.destination,
-
-  train:
-    parts.train,
-
-  station:
-    parts.station
-
-};
-
-confirmTrainQuery(queryLine);
+            confirmTrainQuery(queryLine);
           });
         }
       }, 100);
@@ -201,7 +144,6 @@ confirmTrainQuery(queryLine);
     alert("Voice Support उपलब्ध नहीं है");
   }
 }
-
 
 // DIRECTIONS BUTTON
 function askDirections(){
