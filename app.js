@@ -46,12 +46,11 @@ function renderTrainCard(data){
   const box = document.getElementById("output-box");
 
   const trainName = data.trainName || "ट्रेन";
-  const trainNumber = data.trainNumber || "";
+  const trainNumber = data.trainNumber || "12413";
   const stationName = data.stationName || "स्टेशन";
   const statusMessage = data.statusMessage || "समय पर चल रही है";
-  const arrTime = data.arrivalTime || "--";
-  const depTime = data.departure || "--";
-  const delay = data.delayMinutes || 0;
+  const arrTime = data.arrivalTime || "समय पर";
+  const depTime = data.departure || "समय पर";
   const journeyInfo = data.journeyInfo || "यात्रा की जानकारी उपलब्ध है";
 
   box.innerHTML = `
@@ -94,7 +93,16 @@ function renderTrainCard(data){
   speakText(voiceMsg);
 }
 
-// DIRECTIONS CONFIRMATION (If used)
+// DIRECT LIVE STATUS FUNCTION (Like Where is my train)
+function openLiveStatus(trainNumber){
+  if(trainNumber && trainNumber !== "00000" && trainNumber !== "") {
+    window.open(`https://www.railyatri.in/live-train-status/${trainNumber}`, "_blank");
+  } else {
+    window.open(`https://www.railyatri.in/live-train-status`, "_blank");
+  }
+}
+
+// DIRECTIONS CONFIRMATION
 function confirmDirection(place){
   window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place)}`, "_blank");
 }
