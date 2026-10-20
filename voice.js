@@ -18,7 +18,7 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Advanced Part Extractor (Clean & Precise)
+// Advanced Part Extractor (Perfect for Destination, Train & Station)
 function extractQueryParts(text){
   let cleanText = text.trim();
 
@@ -26,7 +26,7 @@ function extractQueryParts(text){
   let train = "";
   let station = "";
 
-  // 1. गंतव्य (Destination) निकालना - जैसे "दौसा जाने वाली"
+  // 1. गंतव्य (Destination) निकालना - जैसे "बांदीकुई जाने वाली" या "दौसा जाने वाली"
   const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+/i);
   if(destMatch){
     destination = destMatch[1].trim();
@@ -46,7 +46,7 @@ function extractQueryParts(text){
     }
   }
 
-  // 3. ट्रेन का नाम - पीछे के सभी फालतू सवालिया शब्द हटाना
+  // 3. ट्रेन का नाम - पीछे और आगे के सभी फालतू सवालिया शब्द ("कितने बजे आएगी" आदि) साफ करना
   let trainPart = cleanText;
   trainPart = trainPart.replace(/(?:कितने\s+बजे|कब\s+)?(?:आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|कहाँ\s+है|कहां\s+है|बताओ|देखनी\s+है).*$/i, "").trim();
   trainPart = trainPart.replace(/^(?:की|का|के)\s+/i, "").trim();
