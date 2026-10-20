@@ -10,13 +10,7 @@ function hideMic(){
 
 // SPEAK
 function speakText(text){
-  const cleanText = text
-    .replace("📡","")
-    .replace("⏱️","")
-    .replace("✅","")
-    .replace("❌","")
-    .replace("🚨","");
-
+  const cleanText = text.replace(/[📡⏱️✅❌🚨]/g, "");
   const speech = new SpeechSynthesisUtterance(cleanText);
   speech.lang = "hi-IN";
   speech.rate = 1;
@@ -24,7 +18,7 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Advanced Part Extractor (Handles Express, Passenger, Big/Small Stations & Sentences)
+// Advanced Part Extractor (Clean & Precise)
 function extractQueryParts(text){
   let cleanText = text.trim();
 
@@ -32,14 +26,14 @@ function extractQueryParts(text){
   let train = "";
   let station = "";
 
-  // 1. गंतव्य (Destination) निकालना - जैसे "दिल्ली जाने वाली" या "Delhi bound"
+  // 1. गंतव्य (Destination) निकालना - जैसे "दौसा जाने वाली"
   const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+/i);
   if(destMatch){
     destination = destMatch[1].trim();
     cleanText = cleanText.replace(destMatch[0], "").trim();
   }
 
-  // 2. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "Jaipur station"
+  // 2. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "जयपुर पर"
   const stationMatch = cleanText.match(/([^\s]+)\s+(?:स्टेशन|Station|स्टेशन\s+पर|Station\s+at)\s*/i);
   if(stationMatch){
     station = stationMatch[1].trim();
@@ -48,17 +42,16 @@ function extractQueryParts(text){
     const fallbackStationMatch = cleanText.match(/([^\s+]{3,})\s+पर\s+/i);
     if(fallbackStationMatch){
       station = fallbackStationMatch[1].trim();
+      cleanText = cleanText.replace(fallbackStationMatch[0], "").trim();
     }
   }
 
-  // 3. बचा हुआ हिस्सा ट्रेन का नाम (Express, Passenger, Local, MEMU कुछ भी हो सकता है)
+  // 3. ट्रेन का नाम - पीछे के सभी फालतू सवालिया शब्द हटाना
   let trainPart = cleanText;
-  
-  trainPart = trainPart.replace(/(?:कब\s+)?(?:आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|कहाँ\s+है|कहां\s+है|बताओ|देखनी\s+है).*$/i, "").trim();
+  trainPart = trainPart.replace(/(?:कितने\s+बजे|कब\s+)?(?:आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|कहाँ\s+है|कहां\s+है|बताओ|देखनी\s+है).*$/i, "").trim();
   trainPart = trainPart.replace(/^(?:की|का|के)\s+/i, "").trim();
 
   train = trainPart.trim();
-
   if(!train){
     train = text.trim();
   }
@@ -66,7 +59,7 @@ function extractQueryParts(text){
   return {
     destination: destination || "उपलब्ध नहीं",
     train: train,
-    station: station || "मुख्य स्टेशन"
+    station: station || "जयपुर"
   };
 }
 
@@ -89,46 +82,32 @@ function askTrainName(){
 
       // VERIFY CARD
       box.innerHTML = `
-  <div class="train-card">
-    <div class="card-body">
-      <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
-        🎤 क्या आपने यही कहा?
-      </div>
+        <div class="train-card">
+          <div class="card-body">
+            <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
+              🎤 क्या आपने यही कहा?
+            </div>
+            <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
+              ${spokenText}
+            </div>
+            <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
+              <div><b>Destination:</b> ${parts.destination}</div>
+              <div><b>Train Name:</b> ${parts.train}</div>
+              <div><b>Departure Station:</b> ${parts.station}</div>
+            </div>
+            <div class="card-actions" style="margin-top:20px;text-align:center;">
+              <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
+              <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
+            </div>
+          </div>
+        </div>
+      `;
 
-      <!-- हिंदी लाइन -->
-      <div style="background:#eef4ff;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
-        ${spokenText}
-      </div>
-
-      <!-- Categories -->
-      <div style="margin-top:12px;font-size:16px;color:#2563eb;text-align:left;">
-        <div><b>Destination:</b> ${parts.destination}</div>
-        <div><b>Train Name:</b> ${parts.train}</div>
-        <div><b>Departure Station:</b> ${parts.station}</div>
-      </div>
-
-      <div class="card-actions" style="margin-top:20px;text-align:center;">
-        <button class="action-btn" id="confirm-train-btn">✅ हाँ</button>
-        <button class="action-btn" onclick="askTrainName()">❌ नहीं</button>
-      </div>
-    </div>
-  </div>
-`;
-
-      // BUTTON EVENT
       setTimeout(() => {
         const confirmBtn = document.getElementById("confirm-train-btn");
         if(confirmBtn){
           confirmBtn.addEventListener("click", () => {
-            const parts = extractQueryParts(spokenText);
-            
-            const queryLine = {
-              destination: parts.destination,
-              train: parts.train,
-              station: parts.station
-            };
-
-            confirmTrainQuery(queryLine);
+            confirmTrainQuery(parts);
           });
         }
       }, 100);
@@ -164,11 +143,9 @@ function askDirections(){
             <div style="font-size:18px;font-weight:bold;margin-bottom:15px;text-align:center;">
               🧭 क्या आपको यही जगह जाना है?
             </div>
-
             <div style="background:#fff7ed;padding:14px;border-radius:12px;text-align:center;font-size:18px;line-height:1.6;">
               ${spokenText}
             </div>
-
             <div class="card-actions" style="margin-top:20px;">
               <button class="action-btn" onclick="confirmDirection('${spokenText}')">✅ हाँ</button>
               <button class="action-btn" onclick="askDirections()">❌ नहीं</button>
