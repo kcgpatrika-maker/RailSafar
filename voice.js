@@ -18,7 +18,7 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Foolproof Part Extractor (Strips questions first, then extracts Dest, Train & Station)
+// Foolproof Part Extractor (Cleans "पर" from Station completely)
 function extractQueryParts(text){
   let cleanText = text.trim();
 
@@ -34,19 +34,15 @@ function extractQueryParts(text){
   const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+(.*)/i);
   if(destMatch){
     destination = destMatch[1].trim();
-    cleanText = destMatch[2].trim(); // गंतव्य हटाने के बाद बचा हुआ हिस्सा
+    cleanText = destMatch[2].trim();
   }
 
-  // 3. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "जयपुर पर"
+  // 3. स्टेशन (Station) निकालना
   const stationMatch = cleanText.match(/(.*?)\s+([^\s]+)\s+(?:स्टेशन|Station)\s*(.*)/i);
   if(stationMatch){
     train = stationMatch[1].trim();
     station = stationMatch[2].trim();
-    if(stationMatch[3]){
-      train += " " + stationMatch[3].trim();
-    }
   } else {
-    // अगर 'स्टेशन' शब्द नहीं है लेकिन 'जयपुर पर' या ऐसा कुछ है
     const fallbackStn = cleanText.match(/(.*?)\s+([^\s]{3,})\s+पर\s*(.*)/i);
     if(fallbackStn && fallbackStn[2] !== destination){
       train = fallbackStn[1].trim();
@@ -56,7 +52,12 @@ function extractQueryParts(text){
     }
   }
 
-  // सफाई
+  // 4. स्टेशन के नाम से आखिरी "पर" या अतिरिक्त शब्द पूरी तरह हटाना
+  if(station){
+    station = station.replace(/पर$/i, "").trim();
+  }
+
+  // ट्रेन के नाम की सफाई
   train = train.replace(/^(?:की|का|के)\s+/i, "").trim();
   if(!train){
     train = cleanText;
