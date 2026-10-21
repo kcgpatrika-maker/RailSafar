@@ -18,48 +18,53 @@ function speakText(text){
   window.speechSynthesis.speak(speech);
 }
 
-// Advanced Part Extractor (Clean & Precise)
+// Foolproof Part Extractor (Strips questions first, then extracts Dest, Train & Station)
 function extractQueryParts(text){
   let cleanText = text.trim();
 
-  let destination = "";
-  let train = "";
-  let station = "";
+  // 1. सबसे पहले पीछे के सभी सवालिया और फालतू शब्द पूरी तरह हटा दें
+  cleanText = cleanText.replace(/(?:पर\s+)?कितने\s+बजे.*$/gi, "").trim();
+  cleanText = cleanText.replace(/(?:कब|कहाँ|कहां|आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|बताओ|देखनी\s+है).*$/gi, "").trim();
 
-  // 1. गंतव्य (Destination) निकालना - जैसे "बांदीकुई जाने वाली"
-  const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+/i);
+  let destination = "उपलब्ध नहीं";
+  let station = "जयपुर";
+  let train = "";
+
+  // 2. गंतव्य (Destination) निकालना - जैसे "बांदीकुई जाने वाली"
+  const destMatch = cleanText.match(/(.*?)\s+(?:जाने\s+वाली|जानेवाला|going\s+to|bound\s+for)\s+(.*)/i);
   if(destMatch){
     destination = destMatch[1].trim();
-    cleanText = cleanText.replace(destMatch[0], "").trim();
+    cleanText = destMatch[2].trim(); // गंतव्य हटाने के बाद बचा हुआ हिस्सा
   }
 
-  // 2. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "जयपुर पर"
-  const stationMatch = cleanText.match(/([^\s]+)\s+(?:स्टेशन|Station|स्टेशन\s+पर|Station\s+at)\s*/i);
+  // 3. स्टेशन (Station) निकालना - जैसे "जयपुर स्टेशन" या "जयपुर पर"
+  const stationMatch = cleanText.match(/(.*?)\s+([^\s]+)\s+(?:स्टेशन|Station)\s*(.*)/i);
   if(stationMatch){
-    station = stationMatch[1].trim();
-    cleanText = cleanText.replace(stationMatch[0], "").trim();
+    train = stationMatch[1].trim();
+    station = stationMatch[2].trim();
+    if(stationMatch[3]){
+      train += " " + stationMatch[3].trim();
+    }
   } else {
-    const fallbackStationMatch = cleanText.match(/([^\s+]{3,})\s+पर\s+/i);
-    if(fallbackStationMatch){
-      station = fallbackStationMatch[1].trim();
-      cleanText = cleanText.replace(fallbackStationMatch[0], "").trim();
+    // अगर 'स्टेशन' शब्द नहीं है लेकिन 'जयपुर पर' या ऐसा कुछ है
+    const fallbackStn = cleanText.match(/(.*?)\s+([^\s]{3,})\s+पर\s*(.*)/i);
+    if(fallbackStn && fallbackStn[2] !== destination){
+      train = fallbackStn[1].trim();
+      station = fallbackStn[2].trim();
+    } else {
+      train = cleanText;
     }
   }
 
-  // 3. ट्रेन का नाम - "पर कितने बजे", "कितने बजे" और अन्य सवालिया शब्दों को जड़ से साफ करना
-  let trainPart = cleanText;
-  trainPart = trainPart.replace(/(?:पर\s+)?कितने\s+बजे.*$/i, "").trim();
-  trainPart = trainPart.replace(/(?:कब|कहाँ|कहां|आएगी|आयेगी|पहुंचेगी|जाएगी|जायेगी|बताओ|देखनी\s+है).*$/i, "").trim();
-  trainPart = trainPart.replace(/^(?:की|का|के)\s+/i, "").trim();
-
-  train = trainPart.trim();
+  // सफाई
+  train = train.replace(/^(?:की|का|के)\s+/i, "").trim();
   if(!train){
-    train = text.trim();
+    train = cleanText;
   }
 
   return {
-    destination: destination || "उपलब्ध नहीं",
-    train: train,
+    destination: destination,
+    train: train || "एक्सप्रेस ट्रेन",
     station: station || "जयपुर"
   };
 }
